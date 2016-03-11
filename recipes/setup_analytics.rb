@@ -1,9 +1,6 @@
 # encoding: UTF-8
 
 include_recipe 'server-provisioning::_settings'
-if provisioning.driver == 'aws'
-  include_recipe 'server-provisioning::_setup_aws'
-end
 
 # There are two ways to provision the Analytics Server
 #
@@ -81,7 +78,9 @@ machine_file 'analytics-server-cert' do
   chef_server lazy { chef_server_config }
   path lazy { "/var/opt/opscode-analytics/ssl/ca/#{analytics_server_fqdn}.crt" }
   machine analytics_server_hostname
-  local_path lazy { "#{Chef::Config[:trusted_certs_dir]}/#{analytics_server_fqdn}.crt" }
+  local_path lazy {
+    "#{Chef::Config[:trusted_certs_dir]}/#{analytics_server_fqdn}.crt"
+  }
   action :download
 end
 

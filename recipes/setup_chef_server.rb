@@ -1,9 +1,6 @@
 # encoding: UTF-8
 
 include_recipe 'server-provisioning::_settings'
-if provisioning.driver == 'aws'
-  include_recipe 'server-provisioning::_setup_aws'
-end
 
 # Provision the Chef Server with an empty runlist, extract the primary ipaddress
 # to use as the hostname in the initial `/etc/opscode/chef-server.rb` file.
@@ -12,8 +9,8 @@ machine chef_server_hostname do
   provisioning.specific_machine_options('chef-server').each do |option|
     add_machine_options(option)
   end
-  Dir.glob("#{Chef::Config[:trusted_certs_dir]}/*").each do |cert_path|
-    file ::File.join('/etc/chef/trusted_certs', ::File.basename(cert_path)), cert_path
+  Dir.glob("#{Chef::Config[:trusted_certs_dir]}/*").each do |cert|
+    file ::File.join('/etc/chef/trusted_certs', ::File.basename(cert)), cert
   end
   action :converge
 end
@@ -54,9 +51,11 @@ directory Chef::Config[:trusted_certs_dir] do
 end
 
 machine_file 'chef-server-cert' do
-  path lazy { "/var/opt/opscode/nginx/ca/#{chef_server_fqdn}.crt" }
   machine chef_server_hostname
-  local_path lazy { "#{Chef::Config[:trusted_certs_dir]}/#{chef_server_fqdn}.crt" }
+  path lazy { "/var/opt/opscode/nginx/ca/#{chef_server_fqdn}.crt" }
+  local_path lazy {
+    "#{Chef::Config[:trusted_certs_dir]}/#{chef_server_fqdn}.crt"
+  }
   action :download
 end
 

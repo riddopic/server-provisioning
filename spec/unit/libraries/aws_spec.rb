@@ -44,13 +44,13 @@ describe Server::Provisioning::Aws do
           install_sh_path: aws_data['install_sh_path']
         },
         bootstrap_options: {
-          instance_type:      aws_data['flavor'],
-          key_name:           aws_data['key_name'],
-          subnet_id:          aws_data['subnet_id'],
+          instance_type: aws_data['flavor'],
+          key_name: aws_data['key_name'],
+          subnet_id: aws_data['subnet_id'],
           security_group_ids: aws_data['security_group_ids']
         },
-        ssh_username:           aws_data['ssh_username'],
-        image_id:               aws_data['image_id'],
+        ssh_username: aws_data['ssh_username'],
+        image_id: aws_data['image_id'],
         use_private_ip_for_ssh: aws_data['use_private_ip_for_ssh']
       )
     end

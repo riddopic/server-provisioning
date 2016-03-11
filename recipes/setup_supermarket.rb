@@ -1,9 +1,6 @@
 # encoding: UTF-8
 
 include_recipe 'server-provisioning::_settings'
-if provisioning.driver == 'aws'
-  include_recipe 'server-provisioning::_setup_aws'
-end
 
 # There are two ways to provision the Supermarket Server
 #
@@ -66,7 +63,9 @@ machine_file 'supermarket-server-cert' do
   chef_server lazy { chef_server_config }
   path lazy { "/var/opt/supermarket/ssl/ca/#{supermarket_server_fqdn}.crt" }
   machine supermarket_server_hostname
-  local_path lazy { "#{Chef::Config[:trusted_certs_dir]}/#{supermarket_server_fqdn}.crt" }
+  local_path lazy {
+    "#{Chef::Config[:trusted_certs_dir]}/#{supermarket_server_fqdn}.crt"
+  }
   action :download
 end
 

@@ -8,7 +8,6 @@ module Server
     # Vagrant class for vb Provisioning Driver
     #
     # Specify all the methods a Provisioning Driver should implement
-    # @author Ian Henry <ihenry@chef.io>
     class Vagrant < Server::Provisioning::Base
       attr_accessor :node
       attr_accessor :prefix
@@ -21,9 +20,9 @@ module Server
         require 'chef/provisioning/vagrant_driver'
 
         Server::Helpers.check_attribute?(node['server-provisioning'][driver], "node['server-provisioning']['#{driver}']")
-        @node         = node
-        @prefix       = 'sudo '
-        @driver_hash  = @node['server-provisioning'][driver]
+        @node = node
+        @prefix = 'sudo '
+        @driver_hash = @node['server-provisioning'][driver]
         @use_private_ip_for_ssh = false
 
         @driver_hash.each do |attr, value|

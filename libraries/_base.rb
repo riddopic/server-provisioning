@@ -6,7 +6,6 @@ module Server
     # Base class for a Provisioning Abstraction.
     #
     # Specify all the methods a Provisioning Driver should implement
-    # @author Salim Afiune <afiune@chef.io>
     class Base
       # Create a new Provisioning Driver Abstraction
       #
