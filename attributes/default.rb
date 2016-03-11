@@ -5,9 +5,6 @@ default['server-provisioning'].tap do |provisioning|
   # Provisioning Driver
   provisioning['driver'] = 'vagrant'
   #
-  # Source IP to add to inbound security group
-  provisioning['inbound_rules']['source-ip'] = []
-  #
   # AWS Driver Attributes
   provisioning['aws']['key_name'] = ENV['USER']
   provisioning['aws']['ssh_username'] = nil
@@ -18,6 +15,8 @@ default['server-provisioning'].tap do |provisioning|
   provisioning['aws']['chef_config'] = nil
   provisioning['aws']['chef_version'] = nil
   provisioning['aws']['use_private_ip_for_ssh'] = false
+  # Source IP to add to inbound security group
+  provisioning['aws']['source-ips'] = []
   #
   # SSH Driver Attributes
   provisioning['ssh']['key_file'] = nil

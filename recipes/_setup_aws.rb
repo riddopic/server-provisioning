@@ -59,37 +59,37 @@ aws_security_group 'chef-provisioned-sg' do
     { # SSH
       port: 22,
       protocol: :tcp,
-      sources: node['server-provisioning']['inbound_rules']['source-ip']
+      sources: node['server-provisioning']['aws']['source-ips']
     },
     { # HTTP
       port: 80,
       protocol: :tcp,
-      sources: node['server-provisioning']['inbound_rules']['source-ip']
+      sources: node['server-provisioning']['aws']['source-ips']
     },
     { # HTTPS
       port: 443,
       protocol: :tcp,
-      sources: node['server-provisioning']['inbound_rules']['source-ip']
+      sources: node['server-provisioning']['aws']['source-ips']
     },
     { # Git (SCM)
       port: 8989,
       protocol: :tcp,
-      sources: node['server-provisioning']['inbound_rules']['source-ip']
+      sources: node['server-provisioning']['aws']['source-ips']
     },
     { # Analytics MQ
       port: 5672,
       protocol: :tcp,
-      sources: node['server-provisioning']['inbound_rules']['source-ip']
+      sources: node['server-provisioning']['aws']['source-ips']
     },
     { # Push Jobs
       port: 10000..10003,
       protocol: :tcp,
-      sources: node['server-provisioning']['inbound_rules']['source-ip']
+      sources: node['server-provisioning']['aws']['source-ips']
     },
     { # Analytics Messages/Notifier
       port: 10012..10013,
       protocol: :tcp,
-      sources: node['server-provisioning']['inbound_rules']['source-ip']
+      sources: node['server-provisioning']['aws']['source-ips']
     }
   ]
   outbound_rules [
