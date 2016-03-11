@@ -15,8 +15,9 @@ default['server-provisioning'].tap do |provisioning|
   provisioning['aws']['chef_config'] = nil
   provisioning['aws']['chef_version'] = nil
   provisioning['aws']['use_private_ip_for_ssh'] = false
+  #
   # Source IP to add to inbound security group
-  provisioning['aws']['source-ips'] = []
+  provisioning['acl']['source-ips'] = []
   #
   # SSH Driver Attributes
   provisioning['ssh']['key_file'] = nil

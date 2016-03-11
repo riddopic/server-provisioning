@@ -6,13 +6,6 @@ aws_security_group 'chef-provisioned-sg' do
   action :destroy
 end
 
-aws_vpc 'chef-provisioned-vpc' do
-  main_route_table lazy {
-    self.aws_object.route_tables.select { |r| !r.main? }.first
-  }
-  only_if { !self.aws_object.nil? }
-end
-
 aws_route_table 'chef-provisioned-public' do
   action :destroy
 end

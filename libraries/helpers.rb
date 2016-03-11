@@ -121,19 +121,19 @@ module Server
     # @return [Hash] knife variables to render a customized knife.rb
     def knife_variables(node)
       {
-        chef_server_url:      Server::Helpers::ChefServer.chef_server_url(node),
-        client_key:           "#{provisioning_data_dir(node)}/provisioner.pem",
+        chef_server_url: Server::Helpers::ChefServer.chef_server_url(node),
+        client_key: "#{provisioning_data_dir(node)}/provisioner.pem",
         analytics_server_url: if Server::Helpers::Analytics.analytics_enabled?(node)
                                 "https://#{Server::Helpers::Analytics.analytics_server_fqdn(node)}/organizations" \
                                 "/#{node['server-provisioning']['chef-server']['organization']}"
                               else
                                 ''
                               end,
-        supermarket_site:     if Server::Helpers::Supermarket.supermarket_enabled?(node)
-                                "https://#{Server::Helpers::Supermarket.supermarket_server_fqdn(node)}"
-                              else
-                                ''
-                              end
+        supermarket_site: if Server::Helpers::Supermarket.supermarket_enabled?(node)
+                            "https://#{Server::Helpers::Supermarket.supermarket_server_fqdn(node)}"
+                          else
+                            ''
+                          end
       }
     end
 

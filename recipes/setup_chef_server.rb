@@ -2,6 +2,9 @@
 
 include_recipe 'server-provisioning::_settings'
 
+# # Assign the subnet ID.
+# node.override['server-provisioning']['aws']['subnet_id'] = node.run_state[:subnet].aws_object.id
+
 # Provision the Chef Server with an empty runlist, extract the primary ipaddress
 # to use as the hostname in the initial `/etc/opscode/chef-server.rb` file.
 #

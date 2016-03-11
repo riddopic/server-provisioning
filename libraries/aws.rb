@@ -43,6 +43,7 @@ module Server
           bootstrap_options: {
             instance_type: @flavor,
             key_name: @key_name,
+            subnet_id: @subnet_id,
             security_group_ids: @security_group_ids,
           },
           ssh_username: @ssh_username,
@@ -66,6 +67,7 @@ module Server
         return [] unless @node['server-provisioning'][component]
         options = []
         options << { bootstrap_options: { instance_type: @node['server-provisioning'][component]['flavor'] } } if @node['server-provisioning'][component]['flavor']
+        options << { bootstrap_options: { subnet_id: @node['server-provisioning'][component]['subnet_id'] } } if @node['server-provisioning'][component]['subnet_id']
         options << { bootstrap_options: { security_group_ids: @node['server-provisioning'][component]['security_group_ids'] } } if @node['server-provisioning'][component]['security_group_ids']
         options << { image_id: @node['server-provisioning'][component]['image_id'] } if @node['server-provisioning'][component]['image_id']
         options << { aws_tags: @node['server-provisioning'][component]['aws_tags'] } if @node['server-provisioning'][component]['aws_tags']

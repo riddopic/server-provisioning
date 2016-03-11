@@ -17,14 +17,14 @@ aws_vpc 'chef-provisioned-vpc' do
   aws_tags chef_type: 'aws_vpc'
 end
 
-aws_route_table 'chef-provisioned-route-table' do
+aws_route_table 'chef-provisioned-main-route-table' do
   vpc 'chef-provisioned-vpc'
   routes '0.0.0.0/0' => :internet_gateway
   aws_tags chef_type: 'aws_route_table'
 end
 
 aws_vpc 'chef-provisioned-vpc' do
-  main_route_table 'chef-provisioned-route-table'
+  main_route_table 'chef-provisioned-main-route-table'
 end
 
 aws_network_acl 'chef-provisioned-acl' do
@@ -59,37 +59,37 @@ aws_security_group 'chef-provisioned-sg' do
     { # SSH
       port: 22,
       protocol: :tcp,
-      sources: node['server-provisioning']['aws']['source-ips']
+      sources: node['server-provisioning']['acl']['source-ips']
     },
     { # HTTP
       port: 80,
       protocol: :tcp,
-      sources: node['server-provisioning']['aws']['source-ips']
+      sources: node['server-provisioning']['acl']['source-ips']
     },
     { # HTTPS
       port: 443,
       protocol: :tcp,
-      sources: node['server-provisioning']['aws']['source-ips']
+      sources: node['server-provisioning']['acl']['source-ips']
     },
     { # Git (SCM)
       port: 8989,
       protocol: :tcp,
-      sources: node['server-provisioning']['aws']['source-ips']
+      sources: node['server-provisioning']['acl']['source-ips']
     },
     { # Analytics MQ
       port: 5672,
       protocol: :tcp,
-      sources: node['server-provisioning']['aws']['source-ips']
+      sources: node['server-provisioning']['acl']['source-ips']
     },
     { # Push Jobs
       port: 10000..10003,
       protocol: :tcp,
-      sources: node['server-provisioning']['aws']['source-ips']
+      sources: node['server-provisioning']['acl']['source-ips']
     },
     { # Analytics Messages/Notifier
       port: 10012..10013,
       protocol: :tcp,
-      sources: node['server-provisioning']['aws']['source-ips']
+      sources: node['server-provisioning']['acl']['source-ips']
     }
   ]
   outbound_rules [
@@ -105,12 +105,22 @@ aws_route_table 'chef-provisioned-public' do
   aws_tags chef_type: 'aws_route_table'
 end
 
-aws_subnet 'chef-provisioned-subnet' do
+aws_subnet 'chef-provisioned-subnet-2b' do
   vpc 'chef-provisioned-vpc'
   cidr_block '172.16.0.0/24'
   availability_zone 'us-west-2b'
   map_public_ip_on_launch true
-  route_table 'chef-provisioned-route-table'
+  route_table 'chef-provisioned-main-route-table'
+  aws_tags chef_type: 'aws_subnet'
+  network_acl 'chef-provisioned-acl'
+end
+
+aws_subnet 'chef-provisioned-subnet-2c' do
+  vpc 'chef-provisioned-vpc'
+  cidr_block '172.17.0.0/24'
+  availability_zone 'us-west-2c'
+  map_public_ip_on_launch true
+  route_table 'chef-provisioned-main-route-table'
   aws_tags chef_type: 'aws_subnet'
   network_acl 'chef-provisioned-acl'
 end
