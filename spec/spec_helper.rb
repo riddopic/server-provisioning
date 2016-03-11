@@ -1,5 +1,5 @@
 #
-# Cookbook Name:: delivery-cluster
+# Cookbook Name:: provisioner-cluster
 # Spec:: spec_helper
 #
 # Author:: Salim Afiune (<afiune@chef.io>)
@@ -95,14 +95,14 @@ module SharedCommonData
           'important' => 'thing'
         }
       },
-      'delivery' => {
+      'provisioner' => {
         'version' => 'latest',
-        'fqdn' => 'delivery-server.chef.io',
-        'host' => 'delivery-server.chef.io',
+        'fqdn' => 'provisioner-server.chef.io',
+        'host' => 'provisioner-server.chef.io',
         'enterprise' => 'chefspec',
         'artifactory' => false,
         'config' => "nginx['enable_non_ssl'] = true",
-        'license_file' => '/Users/afiune/delivery.license'
+        'license_file' => '/Users/afiune/provisioner.license'
       },
       'analytics' => {
         'fqdn' => 'analytics-server.chef.io',
@@ -118,15 +118,15 @@ module SharedCommonData
       },
       'builders' => {
         'count' => '3',
-        'delivery-cli' => {}
+        'provisioner-cli' => {}
       }
     }
   end
   let(:rest) do
     Chef::ServerAPI.new(
       'https://chef-server.chef.io/organizations/chefspec',
-      client_name: 'delivery',
-      signing_key_filename: File.expand_path('spec/unit/mock/delivery.pem')
+      client_name: 'provisioner',
+      signing_key_filename: File.expand_path('spec/unit/mock/provisioner.pem')
     )
   end
   let(:chef_node) do
@@ -141,7 +141,7 @@ module SharedCommonData
       'recipes' => []
     }
   end
-  let(:delivery_node) do
+  let(:provisioner_node) do
     {
       'normal' => {
         'server-provisioning' => {

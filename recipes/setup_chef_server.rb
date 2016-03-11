@@ -2,7 +2,7 @@
 
 include_recipe 'server-provisioning::_settings'
 if provisioning.driver == 'aws'
-  include_recipe 'server-provisioning::_aws'
+  include_recipe 'server-provisioning::_setup_aws'
 end
 
 # Provision the Chef Server with an empty runlist, extract the primary ipaddress
@@ -67,16 +67,16 @@ machine_file '/tmp/validator.pem' do
   action :download
 end
 
-machine_file '/tmp/delivery.pem' do
+machine_file '/tmp/provisioner.pem' do
   machine chef_server_hostname
   mode '0644' # This is not working.
-  local_path "#{provisioning_data_dir}/delivery.pem"
+  local_path "#{provisioning_data_dir}/provisioner.pem"
   action :download
 end
 
-# Workaround: Ensure that the "delivery.pem" has the right permissions.
+# Workaround: Ensure that the "provisioner.pem" has the right permissions.
 # PR: https://github.com/chef/server-provisioning/issues/174
-file "#{provisioning_data_dir}/delivery.pem" do
+file "#{provisioning_data_dir}/provisioner.pem" do
   mode '0644'
 end
 

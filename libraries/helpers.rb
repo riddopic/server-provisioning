@@ -122,7 +122,7 @@ module Server
     def knife_variables(node)
       {
         chef_server_url:      Server::Helpers::ChefServer.chef_server_url(node),
-        client_key:           "#{provisioning_data_dir(node)}/delivery.pem",
+        client_key:           "#{provisioning_data_dir(node)}/provisioner.pem",
         analytics_server_url: if Server::Helpers::Analytics.analytics_enabled?(node)
                                 "https://#{Server::Helpers::Analytics.analytics_server_fqdn(node)}/organizations" \
                                 "/#{node['server-provisioning']['chef-server']['organization']}"

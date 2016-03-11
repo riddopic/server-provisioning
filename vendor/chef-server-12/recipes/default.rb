@@ -23,7 +23,7 @@ node['chef-server-12']['plugin'].each do |feature, enabled|
   install_plugin(feature) if enabled
 end
 
-# Delivery Setup?
-if node['chef-server-12']['delivery_setup']
-  include_recipe 'chef-server-12::delivery_setup'
+# Provisioner Setup?
+if node['chef-server-12']['provisioner_setup']
+  include_recipe 'chef-server-12::provisioner_setup'
 end

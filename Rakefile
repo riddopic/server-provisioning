@@ -203,8 +203,8 @@ namespace :setup do
       options['driver']['key_name'] = ask_for('Key Name: ')
       options['driver']['ssh_username'] = ask_for('SSH Username', 'ec2-user')
       options['driver']['image_id'] = ask_for('Image ID', 'ami-b8fa16d8')
-      options['driver']['subnet_id'] = ask_for('Subnet ID', 'subnet-44d9ee33')
-      options['driver']['security_group_ids'] = ask_for('Security Group ID', 'sg-bb09ebdc')
+      options['driver']['subnet_id'] = ask_for('Subnet ID', 'chef-provisioned-subnet')
+      options['driver']['security_group_ids'] = ask_for('Security Group ID', 'chef-provisioned-sg')
       options['driver']['use_private_ip_for_ssh'] = ask_for('Use private ip for ssh?', 'yes')
     when 'vagrant'
       options['driver']['ssh_username'] = ask_for('SSH Username', 'vagrant')

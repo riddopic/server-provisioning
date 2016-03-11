@@ -1,6 +1,6 @@
 #
-# Cookbook Name:: delivery-cluster
-# Spec:: delivery_spec
+# Cookbook Name:: provisioner-cluster
+# Spec:: provisioner_spec
 #
 # Author:: Salim Afiune (<afiune@chef.io>)
 #
@@ -22,7 +22,7 @@
 
 require 'spec_helper'
 
-describe 'server-provisioning::delivery' do
+describe 'server-provisioning::provisioner' do
   let(:chef_run) do
     ChefSpec::SoloRunner.new do |node|
       node.set['server-provisioning'] = cluster_data
@@ -33,18 +33,18 @@ describe 'server-provisioning::delivery' do
     allow(File).to receive(:exist?).and_return(true)
   end
 
-  it 'upgrades delivery through chef-ingredient' do
-    expect(chef_run).to upgrade_chef_ingredient('delivery')
+  it 'upgrades provisioner through chef-ingredient' do
+    expect(chef_run).to upgrade_chef_ingredient('provisioner')
   end
 
-  it 'creates /etc/delivery directory' do
-    expect(chef_run).to create_directory('/etc/delivery')
+  it 'creates /etc/provisioner directory' do
+    expect(chef_run).to create_directory('/etc/provisioner')
   end
 
-  it 'creates /etc/delivery/delivery.rb configuration file' do
-    expect(chef_run).to render_file('/etc/delivery/delivery.rb')
+  it 'creates /etc/provisioner/provisioner.rb configuration file' do
+    expect(chef_run).to render_file('/etc/provisioner/provisioner.rb')
       .with_content { |content|
-        expect(content).to include('delivery_fqdn')
+        expect(content).to include('provisioner_fqdn')
         expect(content).to include("insights['enable'] = false")
       }
   end

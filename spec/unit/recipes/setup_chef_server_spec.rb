@@ -1,5 +1,5 @@
 #
-# Cookbook Name:: delivery-cluster
+# Cookbook Name:: provisioner-cluster
 # Spec:: setup_chef_server_spec
 #
 # Author:: Salim Afiune (<afiune@chef.io>)
@@ -31,7 +31,7 @@ describe 'server-provisioning::setup_chef_server' do
 
   before do
     allow_any_instance_of(Chef::Resource).to receive(:provisioning_data_dir)
-      .and_return('/repo/delivery-cluster-dir')
+      .and_return('/repo/provisioner-cluster-dir')
   end
 
   it 'includes _settings recipe' do
@@ -47,8 +47,8 @@ describe 'server-provisioning::setup_chef_server' do
       .with_machine('chef-server-chefspec')
   end
 
-  it 'download the delivery.pem' do
-    expect(chef_run).to download_machine_file('/tmp/delivery.pem')
+  it 'download the provisioner.pem' do
+    expect(chef_run).to download_machine_file('/tmp/provisioner.pem')
       .with_machine('chef-server-chefspec')
   end
 
@@ -57,7 +57,7 @@ describe 'server-provisioning::setup_chef_server' do
       .with_machine('chef-server-chefspec')
   end
 
-  it 'upload delivery cookbooks through a ruby_block' do
-    expect(chef_run).to run_ruby_block('upload delivery cookbooks')
+  it 'upload provisioner cookbooks through a ruby_block' do
+    expect(chef_run).to run_ruby_block('upload provisioner cookbooks')
   end
 end

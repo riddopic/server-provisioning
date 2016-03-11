@@ -5,7 +5,7 @@ driver:
     memory: 4096
     cpus: 4
 # We are using chef_solo because of the data_bag creation.
-# chef_zero uses chef-client so when I tried to fake the delivery
+# chef_zero uses chef-client so when I tried to fake the provisioner
 # node to upload the data bag I got an SSL error..
 provisioner:
   name: chef_solo

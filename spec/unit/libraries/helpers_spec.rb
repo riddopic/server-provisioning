@@ -1,24 +1,4 @@
-#
-# Cookbook Name:: delivery-cluster
-# Spec:: helpers_spec
-#
-# Author:: Salim Afiune (<afiune@chef.io>)
-#
-# Copyright:: Copyright (c) 2015 Chef Software, Inc.
-# License:: Apache License, Version 2.0
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#      http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-#
+# encoding: UTF-8
 
 require 'spec_helper'
 
@@ -67,21 +47,6 @@ describe Server::Helpers do
       it 'create a chef_provisioning_id and return it' do
         expect(described_class.chef_provisioning_id(node)).not_to be nil
         expect(described_class.chef_provisioning_id(node).class).to be String
-      end
-    end
-  end
-
-  context 'when license_file' do
-    context 'is specified' do
-      it 'NOT raise an error' do
-        expect { described_class.validate_license_file(node) }.not_to raise_error
-      end
-    end
-    context 'is NOT specified' do
-      before { node.default['server-provisioning']['delivery']['license_file'] = nil }
-
-      it 'raise an error' do
-        expect { described_class.validate_license_file(node) }.to raise_error(RuntimeError)
       end
     end
   end
@@ -151,7 +116,7 @@ describe Server::Helpers do
       end
 
       it 'return the ip address' do
-        expect(described_class.get_ip(node, delivery_node)).to eq '10.1.1.2'
+        expect(described_class.get_ip(node, provisioner_node)).to eq '10.1.1.2'
       end
 
       it 'return the provisioning instance' do
@@ -181,7 +146,7 @@ describe Server::Helpers do
   it 'return return knife variables' do
     expect(described_class.knife_variables(node)).to eq(
       chef_server_url: 'https://chef-server.chef.io/organizations/chefspec',
-      client_key: File.join(Chef::Config.chef_repo_path, '.chef', 'provisioning-data-chefspec', 'delivery.pem'),
+      client_key: File.join(Chef::Config.chef_repo_path, '.chef', 'provisioning-data-chefspec', 'provisioner.pem'),
       analytics_server_url: '',
       supermarket_site: ''
     )

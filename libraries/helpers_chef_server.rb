@@ -76,7 +76,7 @@ module Server
       def chef_server_attributes(node)
         @chef_server_attributes = {
           'chef-server-12' => {
-            'delivery' => {
+            'provisioner' => {
               'organization' => node['server-provisioning']['chef-server']['organization'],
               'password' => provisioning_password(node)
             },
@@ -112,8 +112,8 @@ module Server
         {
           chef_server_url: chef_server_url(node),
           options: {
-            client_name: 'delivery',
-            signing_key_filename: "#{Server::Helpers.provisioning_data_dir(node)}/delivery.pem"
+            client_name: 'provisioner',
+            signing_key_filename: "#{Server::Helpers.provisioning_data_dir(node)}/provisioner.pem"
           }
         }
       end

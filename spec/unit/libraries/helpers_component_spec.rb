@@ -1,24 +1,4 @@
-#
-# Cookbook Name:: delivery-cluster
-# Spec:: helpers_component_spec
-#
-# Author:: Salim Afiune (<afiune@chef.io>)
-#
-# Copyright:: Copyright (c) 2015 Chef Software, Inc.
-# License:: Apache License, Version 2.0
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#      http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-#
+# encoding: UTF-8
 
 require 'spec_helper'
 
@@ -32,8 +12,8 @@ describe Server::Helpers::Component do
       .with('nodes/chef-server-chefspec')
       .and_return(chef_node)
     allow_any_instance_of(Chef::ServerAPI).to receive(:get)
-      .with('nodes/delivery-server-chefspec')
-      .and_return(delivery_node)
+      .with('nodes/provisioner-server-chefspec')
+      .and_return(provisioner_node)
     allow_any_instance_of(Chef::ServerAPI).to receive(:get)
       .with('nodes/supermarket-server-chefspec')
       .and_return(supermarket_node)
@@ -51,8 +31,8 @@ describe Server::Helpers::Component do
         expect(described_class.component_fqdn(node, 'chef-server')).to eq cluster_data['chef-server']['fqdn']
       end
 
-      it 'return delivery component fqdn' do
-        expect(described_class.component_fqdn(node, 'delivery')).to eq cluster_data['delivery']['fqdn']
+      it 'return provisioner component fqdn' do
+        expect(described_class.component_fqdn(node, 'provisioner')).to eq cluster_data['provisioner']['fqdn']
       end
 
       it 'return supermarket component fqdn' do
@@ -71,7 +51,7 @@ describe Server::Helpers::Component do
     context 'is NOT speficied and host' do
       before do
         node.default['server-provisioning']['chef-server']['fqdn'] = nil
-        node.default['server-provisioning']['delivery']['fqdn']    = nil
+        node.default['server-provisioning']['provisioner']['fqdn']    = nil
         node.default['server-provisioning']['supermarket']['fqdn'] = nil
         node.default['server-provisioning']['analytics']['fqdn']   = nil
         node.default['server-provisioning']['splunk']['fqdn']      = nil
@@ -82,8 +62,8 @@ describe Server::Helpers::Component do
           expect(described_class.component_fqdn(node, 'chef-server')).to eq cluster_data['chef-server']['host']
         end
 
-        it 'return delivery component host' do
-          expect(described_class.component_fqdn(node, 'delivery')).to eq cluster_data['delivery']['host']
+        it 'return provisioner component host' do
+          expect(described_class.component_fqdn(node, 'provisioner')).to eq cluster_data['provisioner']['host']
         end
 
         it 'return supermarket component host' do
@@ -102,7 +82,7 @@ describe Server::Helpers::Component do
       context 'does NOT exist' do
         before do
           node.default['server-provisioning']['chef-server']['host'] = nil
-          node.default['server-provisioning']['delivery']['host']    = nil
+          node.default['server-provisioning']['provisioner']['host']    = nil
           node.default['server-provisioning']['supermarket']['host'] = nil
           node.default['server-provisioning']['analytics']['host']   = nil
           node.default['server-provisioning']['splunk']['host']      = nil
@@ -114,8 +94,8 @@ describe Server::Helpers::Component do
           expect(described_class.component_fqdn(node, 'chef-server')).to eq '10.1.1.1'
         end
 
-        it 'return delivery component ip_address' do
-          expect(described_class.component_fqdn(node, 'delivery')).to eq '10.1.1.2'
+        it 'return provisioner component ip_address' do
+          expect(described_class.component_fqdn(node, 'provisioner')).to eq '10.1.1.2'
         end
 
         it 'return supermarket component ip_address' do
@@ -135,7 +115,7 @@ describe Server::Helpers::Component do
 
   context 'when `hostname` attribute' do
     context 'is NOT configured' do
-      %w( delivery supermarket analytics splunk ).each do |component|
+      %w( provisioner supermarket analytics splunk ).each do |component|
         it "generate a hostname for #{component}" do
           expect(described_class.component_hostname(node, component)).to eq "#{component}-server-chefspec"
         end
@@ -149,13 +129,13 @@ describe Server::Helpers::Component do
     context 'is configured' do
       before do
         node.default['server-provisioning']['chef-server']['hostname'] = 'my-cool-hostname.chef-server.com'
-        node.default['server-provisioning']['delivery']['hostname']    = 'my-cool-hostname.delivery.com'
+        node.default['server-provisioning']['provisioner']['hostname']    = 'my-cool-hostname.provisioner.com'
         node.default['server-provisioning']['supermarket']['hostname'] = 'my-cool-hostname.supermarket.com'
         node.default['server-provisioning']['analytics']['hostname']   = 'my-cool-hostname.analytics.com'
         node.default['server-provisioning']['splunk']['hostname']      = 'my-cool-hostname.splunk.com'
       end
 
-      %w( chef-server delivery supermarket analytics splunk ).each do |component|
+      %w( chef-server provisioner supermarket analytics splunk ).each do |component|
         it "return our cool-#{component} hostname" do
           expect(described_class.component_hostname(node, component)).to eq "my-cool-hostname.#{component}.com"
         end
@@ -172,14 +152,14 @@ describe Server::Helpers::Component do
   context 'when the component attributes are not set' do
     before do
       node.default['server-provisioning']['chef-server']  = nil
-      node.default['server-provisioning']['delivery']     = nil
+      node.default['server-provisioning']['provisioner']     = nil
       node.default['server-provisioning']['supermarket']  = nil
       node.default['server-provisioning']['analytics']    = nil
       node.default['server-provisioning']['splunk']       = nil
       node.default['server-provisioning']['builders']     = nil
     end
 
-    %w( chef-server delivery supermarket analytics splunk builders ).each do |component|
+    %w( chef-server provisioner supermarket analytics splunk builders ).each do |component|
       it "raise an error for #{component}" do
         expect { described_class.component_hostname(node, component) }.to raise_error(RuntimeError)
       end

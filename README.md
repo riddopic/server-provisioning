@@ -100,7 +100,7 @@ This cookbook uses [chef-provisioning](https://github.com/chef/chef-provisioning
 The available drivers that you can use are:
 
 ### Vagrant Driver [Default]
-This driver will provision the Delivery cluster locally using [Vagrant](https://www.vagrantup.com/).
+This driver will provision the Provisioner cluster locally using [Vagrant](https://www.vagrantup.com/).
 As such, you MUST have vagrant installed for this to function.
 
 The `rake setup:generate_env` task will generate this for you.
@@ -174,7 +174,7 @@ This cookbook will also create a `security-group` with the following ports open 
 | Port           | Protocol    | Description                                 |
 | -------------- |------------ | ------------------------------------------- |
 | 10000 - 10003  | TCP | Push Jobs
-| 8989           | TCP | Delivery Git (SCM)
+| 8989           | TCP | Provisioner Git (SCM)
 | 443            | TCP | HTTP Secure
 | 22             | TCP | SSH
 | 80             | TCP | HTTP
@@ -278,7 +278,7 @@ This is an example of how to specify this information
       "chef-server": {
         "ip": "33.33.33.10",
         "organization": "ssh",
-        "delivery_password": "SuperSecurePassword"
+        "provisioner_password": "SuperSecurePassword"
       },
       "analytics": {
         "ip": "33.33.33.12"
@@ -319,7 +319,7 @@ in different ways.
 | Attribute       | Description                       |
 | --------------- | --------------------------------- |
 | `hostname`      | Hostname of your Chef Server.     |
-| `organization`  | The organization name we will create for the Delivery Environment. |
+| `organization`  | The organization name we will create for the Provisioner Environment. |
 | `flavor`        | AWS Flavor of the Chef Server.   |
 | `fqdn`          | The Chef Server FQDN to substitute the IP Address. |
 | `existing`      | Set this to `true` if you want to use an existing chef-server. |

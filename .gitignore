@@ -10,6 +10,6 @@ nodes*
 .chef/local-mode-cache
 .chef/syntaxcache
 .chef/trusted_certs
-.chef/delivery-cluster*
+.chef/provisioner-cluster*
 .chef/keys
 .chef/provisioning/

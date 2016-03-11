@@ -33,9 +33,9 @@ default['server-provisioning'].tap do |provisioning|
   provisioning['vagrant']['prefix'] = nil
   provisioning['vagrant']['ssh_username'] = nil
   provisioning['vagrant']['vm_box'] = nil
-  provisioning['Vagrant']['image_url'] = nil
-  provisioning['Vagrant']['vm_memory'] = nil
-  provisioning['Vagrant']['vm_cpus'] = nil
+  provisioning['vagrant']['image_url'] = nil
+  provisioning['vagrant']['vm_memory'] = nil
+  provisioning['vagrant']['vm_cpus'] = nil
   provisioning['vagrant']['network'] = nil
   provisioning['vagrant']['key_file'] = nil
   provisioning['vagrant']['chef_config'] = nil

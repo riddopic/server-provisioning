@@ -43,7 +43,7 @@ module Server
           bootstrap_options: {
             instance_type: @flavor,
             key_name: @key_name,
-            security_group_ids: @security_group_ids
+            security_group_ids: @security_group_ids,
           },
           ssh_username: @ssh_username,
           image_id: @image_id,

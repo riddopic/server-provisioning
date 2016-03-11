@@ -1,5 +1,5 @@
 #
-# Cookbook Name:: delivery-cluster
+# Cookbook Name:: provisioner-cluster
 # Spec:: destroy_all_spec
 #
 # Author:: Salim Afiune (<afiune@chef.io>)
@@ -37,7 +37,7 @@ describe 'server-provisioning::destroy_all' do
 
     includes = %w(
       _settings destroy_builders destroy_analytics destroy_supermarket
-      destroy_splunk destroy_delivery destroy_chef_server destroy_cluster_data
+      destroy_splunk destroy_provisioner destroy_chef_server destroy_cluster_data
     )
 
     includes.each do |recipename|

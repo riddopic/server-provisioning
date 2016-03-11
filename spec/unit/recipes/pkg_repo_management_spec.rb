@@ -1,5 +1,5 @@
 #
-# Cookbook Name:: delivery-cluster
+# Cookbook Name:: provisioner-cluster
 # Spec:: pkg_repo_management_spec
 #
 # Author:: Salim Afiune (<afiune@chef.io>)
@@ -90,7 +90,7 @@ describe 'server-provisioning::pkg_repo_management' do
     end
 
     it 'write log' do
-      expect(chef_run).to write_log 'delivery-cluster-pkg-repo-update-not-handled'
+      expect(chef_run).to write_log 'provisioner-cluster-pkg-repo-update-not-handled'
     end
   end
 end

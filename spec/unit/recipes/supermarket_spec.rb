@@ -1,5 +1,5 @@
 #
-# Cookbook Name:: delivery-cluster
+# Cookbook Name:: provisioner-cluster
 # Spec:: supermarket_spec
 #
 # Author:: Salim Afiune (<afiune@chef.io>)

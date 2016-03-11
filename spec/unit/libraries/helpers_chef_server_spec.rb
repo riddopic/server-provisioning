@@ -1,24 +1,4 @@
-#
-# Cookbook Name:: delivery-cluster
-# Spec:: helpers_chef_server_spec
-#
-# Author:: Salim Afiune (<afiune@chef.io>)
-#
-# Copyright:: Copyright (c) 2015 Chef Software, Inc.
-# License:: Apache License, Version 2.0
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#      http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-#
+# encoding: UTF-8
 
 require 'spec_helper'
 
@@ -34,7 +14,7 @@ describe Server::Helpers::ChefServer do
   end
   let(:mock_chef_server_attributes) do
     {
-      'delivery' => {
+      'provisioner' => {
         'organization' => 'chefspec',
         'password' => provisioning_password
       },
@@ -85,7 +65,7 @@ describe Server::Helpers::ChefServer do
     expect(described_class.chef_server_fqdn(node)).to eq 'chef-server.chef.io'
   end
 
-  it 'returns a random delivery password' do
+  it 'returns a random provisioner password' do
     random_password = described_class.provisioning_password(node)
     expect(described_class.provisioning_password(node)).to_not eq provisioning_password
     expect(described_class.provisioning_password(node)).to eq random_password
@@ -95,14 +75,14 @@ describe Server::Helpers::ChefServer do
     expect(described_class.chef_server_config(node)).to eq(
       chef_server_url: 'https://chef-server.chef.io/organizations/chefspec',
       options: {
-        client_name: 'delivery',
-        signing_key_filename: File.join(Chef::Config.chef_repo_path, '.chef', 'provisioning-data-chefspec', 'delivery.pem')
+        client_name: 'provisioner',
+        signing_key_filename: File.join(Chef::Config.chef_repo_path, '.chef', 'provisioning-data-chefspec', 'provisioner.pem')
       }
     )
   end
 
-  context 'with same delivery password' do
-    # Mock the delivery passsword to test other attributes
+  context 'with same provisioner password' do
+    # Mock the provisioner passsword to test other attributes
     before do
       allow(Server::Helpers::ChefServer).to receive(:provisioning_password)
         .and_return(provisioning_password)

@@ -1,5 +1,5 @@
 #
-# Cookbook Name:: delivery-cluster
+# Cookbook Name:: provisioner-cluster
 # Spec:: setup_spec
 #
 # Author:: Ian Henry (<ihenry@chef.io>)
@@ -42,7 +42,7 @@ describe 'server-provisioning::setup' do
     end
 
     context 'always' do
-      includes = %w( _settings setup_chef_server setup_delivery)
+      includes = %w( _settings setup_chef_server setup_provisioner)
       includes.each do |recipename|
         it "includes #{recipename} recipe" do
           expect(chef_run).to include_recipe("server-provisioning::#{recipename}")
@@ -96,7 +96,7 @@ describe 'server-provisioning::setup' do
         chef_run.converge(described_recipe)
       end
 
-      includes = %w( _settings setup_chef_server setup_delivery)
+      includes = %w( _settings setup_chef_server setup_provisioner)
 
       includes.each do |recipename|
         it "includes #{recipename} recipe" do
@@ -121,7 +121,7 @@ describe 'server-provisioning::setup' do
         chef_run.converge(described_recipe)
       end
 
-      includes = %w( _settings setup_chef_server setup_delivery)
+      includes = %w( _settings setup_chef_server setup_provisioner)
 
       includes.each do |recipename|
         it "includes #{recipename} recipe" do

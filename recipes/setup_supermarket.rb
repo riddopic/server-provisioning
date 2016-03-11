@@ -2,7 +2,7 @@
 
 include_recipe 'server-provisioning::_settings'
 if provisioning.driver == 'aws'
-  include_recipe 'server-provisioning::_aws'
+  include_recipe 'server-provisioning::_setup_aws'
 end
 
 # There are two ways to provision the Supermarket Server

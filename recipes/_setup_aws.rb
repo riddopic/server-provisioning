@@ -2,27 +2,20 @@
 
 include_recipe 'server-provisioning::_settings'
 
-aws_vpc 'chef-vpc' do
+aws_vpc 'chef-provisioned-vpc' do
   cidr_block '10.0.0.0/24'
   internet_gateway true
   main_routes '0.0.0.0/0' => :internet_gateway
 end
 
-aws_subnet 'subnet-a' do
-  vpc 'chef-vpc'
-  cidr_block '10.0.0.0/26'
-  availability_zone 'us-west-2a'
-  map_public_ip_on_launch true
-end
-
-aws_subnet 'subnet-b' do
+aws_subnet 'chef-provisioned-subnet' do
   vpc 'chef-vpc'
   cidr_block '10.0.0.128/26'
   availability_zone 'us-west-2b'
   map_public_ip_on_launch true
 end
 
-aws_security_group 'chef-sg' do
+aws_security_group 'chef-provisioned-sg' do
   inbound_rules [
     { # SSH
       port: 22,

@@ -1,6 +1,6 @@
 #
-# Cookbook Name:: delivery-cluster
-# Spec:: setup_delivery_server_spec
+# Cookbook Name:: provisioner-cluster
+# Spec:: setup_provisioner_server_spec
 #
 # Author:: Salim Afiune (<afiune@chef.io>)
 #
@@ -22,7 +22,7 @@
 
 require 'spec_helper'
 
-describe 'server-provisioning::setup_delivery_server' do
+describe 'server-provisioning::setup_provisioner_server' do
   let(:chef_run) do
     ChefSpec::SoloRunner.new do |node|
       node.set['server-provisioning'] = cluster_data
@@ -31,34 +31,34 @@ describe 'server-provisioning::setup_delivery_server' do
 
   before do
     allow_any_instance_of(Chef::Resource).to receive(:provisioning_data_dir)
-      .and_return('/repo/delivery-cluster-dir')
+      .and_return('/repo/provisioner-cluster-dir')
   end
 
   it 'includes _settings recipe' do
     expect(chef_run).to include_recipe('server-provisioning::_settings')
   end
 
-  it 'converge delivery machine' do
-    expect(chef_run).to converge_machine('delivery-server-chefspec')
+  it 'converge provisioner machine' do
+    expect(chef_run).to converge_machine('provisioner-server-chefspec')
       .with_files(
-        '/etc/delivery/delivery.pem' => '/repo/delivery-cluster-dir/delivery.pem',
-        '/etc/delivery/builder_key' => '/repo/delivery-cluster-dir/builder_key',
-        '/etc/delivery/builder_key.pub' => '/repo/delivery-cluster-dir/builder_key.pub'
+        '/etc/provisioner/provisioner.pem' => '/repo/provisioner-cluster-dir/provisioner.pem',
+        '/etc/provisioner/builder_key' => '/repo/provisioner-cluster-dir/builder_key',
+        '/etc/provisioner/builder_key.pub' => '/repo/provisioner-cluster-dir/builder_key.pub'
       )
   end
 
   it 'download the credentials chefspec.creds' do
     expect(chef_run).to download_machine_file('/tmp/chefspec.creds')
-      .with_machine('delivery-server-chefspec')
+      .with_machine('provisioner-server-chefspec')
   end
 
-  it 'download delivery-server-cert' do
-    expect(chef_run).to download_machine_file('delivery-server-cert')
-      .with_machine('delivery-server-chefspec')
+  it 'download provisioner-server-cert' do
+    expect(chef_run).to download_machine_file('provisioner-server-cert')
+      .with_machine('provisioner-server-chefspec')
   end
 
   it 'create an enterprise' do
     expect(chef_run).to run_machine_execute('Creating Enterprise')
-      .with_machine('delivery-server-chefspec')
+      .with_machine('provisioner-server-chefspec')
   end
 end
