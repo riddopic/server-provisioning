@@ -105,7 +105,7 @@ aws_route_table 'chef-provisioned-public' do
   aws_tags chef_type: 'aws_route_table'
 end
 
-aws_subnet 'chef-provisioned-subnet-2b' do
+aws_subnet 'chef-provisioned-subnet' do
   vpc 'chef-provisioned-vpc'
   cidr_block '172.16.0.0/24'
   availability_zone 'us-west-2b'
@@ -115,12 +115,12 @@ aws_subnet 'chef-provisioned-subnet-2b' do
   network_acl 'chef-provisioned-acl'
 end
 
-aws_subnet 'chef-provisioned-subnet-2c' do
-  vpc 'chef-provisioned-vpc'
-  cidr_block '172.17.0.0/24'
-  availability_zone 'us-west-2c'
-  map_public_ip_on_launch true
-  route_table 'chef-provisioned-main-route-table'
-  aws_tags chef_type: 'aws_subnet'
-  network_acl 'chef-provisioned-acl'
-end
+# aws_subnet 'chef-provisioned-subnet-2c' do
+#   vpc 'chef-provisioned-vpc'
+#   cidr_block '172.17.0.0/24'
+#   availability_zone 'us-west-2c'
+#   map_public_ip_on_launch true
+#   route_table 'chef-provisioned-main-route-table'
+#   aws_tags chef_type: 'aws_subnet'
+#   network_acl 'chef-provisioned-acl'
+# end

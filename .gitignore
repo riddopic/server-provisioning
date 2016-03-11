@@ -13,3 +13,4 @@ nodes*
 .chef/provisioning-data*
 .chef/keys
 .chef/provisioning/
+SCRATCH.md
