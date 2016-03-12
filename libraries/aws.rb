@@ -47,6 +47,7 @@ module Server
             security_group_ids: @security_group_ids,
           },
           ssh_username: @ssh_username,
+          aws_tags: @tags,
           image_id: @image_id,
           use_private_ip_for_ssh: @use_private_ip_for_ssh
         }

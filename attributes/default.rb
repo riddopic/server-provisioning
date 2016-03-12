@@ -9,6 +9,7 @@ default['server-provisioning'].tap do |provisioning|
   provisioning['aws']['key_name'] = ENV['USER']
   provisioning['aws']['ssh_username'] = nil
   provisioning['aws']['security_group_ids'] = nil
+  provisioning['aws']['tags'] = { provisioned_by: ENV['USER'] }
   provisioning['aws']['image_id'] = nil
   provisioning['aws']['subnet_id'] = nil
   provisioning['aws']['bootstrap_proxy'] = ENV['HTTPS_PROXY'] || ENV['HTTP_PROXY']

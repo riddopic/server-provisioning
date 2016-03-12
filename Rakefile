@@ -53,6 +53,7 @@ class ProvisioningEnvironment
           'id' => @cluster_id,
           'driver' => @driver_name,
           @driver_name => @driver,
+          'acl' => (@acl if @acl && ! @acl.empty?),
           'chef-server' => @chef_server,
           'analytics' => (@analytics if @analytics && ! @analytics.empty?),
           'supermarket' => (@supermarket if @supermarket && ! @supermarket.empty?)
@@ -74,8 +75,9 @@ ENV['CHEF_ENV_FILE'] = "environments/#{ENV['CHEF_ENV']}.json"
 # If the environment file does not exist or it has syntax errors fail fast
 def validate_environment
   unless File.exist?(ENV['CHEF_ENV_FILE'])
-    puts 'You need to configure an Environment under \'environments/\'. Check the README.md'.red
-    puts 'You can use the \'generate_env\' task to auto-generate one:'
+    puts 'You need to configure an Environment under "environments". ' \
+         'Check the README.md'.red
+    puts 'You can use the "generate_env" task to auto-generate one:'
     puts '  # rake setup:generate_env'
     puts "\nOr if you just have a different chef environment name run:"
     puts "  # export CHEF_ENV=#{'my_new_environment'.yellow}"
@@ -208,6 +210,11 @@ namespace :setup do
       options['driver']['subnet_id'] = ask_for('Subnet ID', 'chef-provisioned-subnet')
       options['driver']['security_group_ids'] = ask_for('Security Group ID', 'chef-provisioned-sg')
       options['driver']['use_private_ip_for_ssh'] = ask_for('Use private ip for ssh?', 'yes')
+      if ask_for('Would you like to specify source IP for the AWS Security group?', 'yes')
+        src_ips = ask_for('Source IPs:', '24.7.32.100/32 162.119.232.109/32 162.119.232.149/32')
+        options['acl'] = {}
+        options['acl']['source-ips'] = src_ips.split
+      end
     when 'vagrant'
       options['driver']['ssh_username'] = ask_for('SSH Username', 'vagrant')
       options['driver']['vm_box'] = ask_for('Box Type: ', 'opscode-centos-6.6')
@@ -225,9 +232,9 @@ namespace :setup do
     end
     # Proxy Settings
     if ask_for('Would you like to configure Proxy Settings?', 'no')
-      http_proxy  = ask_for('http_proxy: ')
+      http_proxy = ask_for('http_proxy: ')
       https_proxy = ask_for('https_proxy: ')
-      no_proxy    = ask_for('no_proxy: ')
+      no_proxy = ask_for('no_proxy: ')
       options['driver']['bootstrap_proxy'] = https_proxy || http_proxy || nil
       options['driver']['chef_config'] = "http_proxy '#{http_proxy}'\n" \
                                          "https_proxy '#{https_proxy}'\n" \

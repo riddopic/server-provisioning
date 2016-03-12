@@ -2,9 +2,6 @@
 
 include_recipe 'server-provisioning::_settings'
 
-# # Assign the subnet ID.
-# node.override['server-provisioning']['aws']['subnet_id'] = node.run_state[:subnet].aws_object.id
-
 # There are two ways to provision the Supermarket Server
 #
 # 1) Provisioning the entire "server-provisioning::setup" or
