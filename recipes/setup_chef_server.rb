@@ -15,6 +15,12 @@ machine chef_server_hostname do
   action :converge
 end
 
+aws_eip_address 'chef-server-eip' do
+  machine lazy { chef_server_hostname }
+  associate_to_vpc true
+  only_if { provisioning.driver == 'aws' }
+end
+
 directory provisioning_data_dir do
   recursive true
   action :create

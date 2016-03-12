@@ -211,16 +211,22 @@ Here is an example of how you specify them
       "id": "aws",
       "driver": "aws",
       "aws": {
-        "key_name": "sharding",
+        "key_name": "yourkey",
         "ssh_username": "ubuntu",
         "image_id": "ami-a52bc9c5",
-        "subnet_id": "subnet-44d9ee33",
-        "security_group_ids": "sg-bb09ebdc",
+        "subnet_id": "chef-provisioned-subnet",
+        "security_group_ids": "chef-provisioned-sg",
         "use_private_ip_for_ssh": false
+      },
+      "acl": {
+        "source-ips": [
+          "54.53.128.100/32",
+          "45.35.100.128/32",
+        ]
       },
       "chef-server": {
         "organization": "chefops",
-        "flavor": "c3.xlarge"
+        "flavor": "m3.medium"
       },
       "analytics": {
         "flavor": "c3.xlarge"
