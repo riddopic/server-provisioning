@@ -21,12 +21,12 @@ module Server
         require 'chef/provisioning/ssh_driver'
 
         Server::Helpers.check_attribute?(
-          node['server-provisioning'][driver],
-          "node['server-provisioning']['#{driver}']"
+          node['provisioning'][driver],
+          "node['provisioning']['#{driver}']"
         )
         @node = node
         @prefix = 'sudo '
-        @driver_hash = @node['server-provisioning'][driver]
+        @driver_hash = @node['provisioning'][driver]
 
         @driver_hash.each do |attr, value|
           singleton_class.class_eval { attr_accessor attr }
@@ -69,18 +69,18 @@ module Server
       # @param count [Integer] component number
       # @return [Array] specific machine_options for the specific component
       def specific_machine_options(component, count = nil)
-        return [] unless @node['server-provisioning'][component]
+        return [] unless @node['provisioning'][component]
         options = []
         if count
-          if @node['server-provisioning'][component][count.to_s]['host']
-            options << { transport_options: { host: @node['server-provisioning'][component][count.to_s]['host'] } }
-          elsif @node['server-provisioning'][component][count.to_s]['ip']
-            options << { transport_options: { ip_address: @node['server-provisioning'][component][count.to_s]['ip'] } }
-          end if @node['server-provisioning'][component][count.to_s]
-        elsif @node['server-provisioning'][component]['host']
-          options << { transport_options: { host: @node['server-provisioning'][component]['host'] } }
-        elsif @node['server-provisioning'][component]['ip']
-          options << { transport_options: { ip_address: @node['server-provisioning'][component]['ip'] } }
+          if @node['provisioning'][component][count.to_s]['host']
+            options << { transport_options: { host: @node['provisioning'][component][count.to_s]['host'] } }
+          elsif @node['provisioning'][component][count.to_s]['ip']
+            options << { transport_options: { ip_address: @node['provisioning'][component][count.to_s]['ip'] } }
+          end if @node['provisioning'][component][count.to_s]
+        elsif @node['provisioning'][component]['host']
+          options << { transport_options: { host: @node['provisioning'][component]['host'] } }
+        elsif @node['provisioning'][component]['ip']
+          options << { transport_options: { ip_address: @node['provisioning'][component]['ip'] } }
         end
         # Specify more specific machine_options to add
         options

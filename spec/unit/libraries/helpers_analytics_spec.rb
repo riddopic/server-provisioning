@@ -13,7 +13,7 @@ describe Server::Helpers::Analytics do
   end
 
   before do
-    node.default['server-provisioning'] = cluster_data
+    node.default['provisioning'] = cluster_data
     allow(FileUtils).to receive(:touch).and_return(true)
     allow(Chef::Node).to receive(:load).and_return(Chef::Node.new)
     allow(Chef::ServerAPI).to receive(:new).and_return(rest)

@@ -1,20 +1,31 @@
 # encoding: UTF-8
 
-include_recipe 'server-provisioning::_settings'
+include_recipe 'provisioning::_settings'
 
 # There are two ways to provision the Supermarket Server
 #
-# 1) Provisioning the entire "server-provisioning::setup" or
-# 2) Just the Chef Server "server-provisioning::setup_chef_server"
+# 1) Provisioning the entire "provisioning::setup" or
+# 2) Just the Chef Server "provisioning::setup_chef_server"
 #
 # After that you are good to provision Supermarket running:
 #   bundle exec chef-client -z -o provisioning::setup_supermarket -E test
 #
 machine supermarket_server_hostname do
-  chef_server lazy { chef_server_config }
   provisioning.specific_machine_options('supermarket').each do |option|
-    add_machine_options option
+    add_machine_options(option)
   end
+  action :converge
+end
+
+# Destroy the EIP when using the AWS driver
+aws_eip_address 'supermarket-eip' do
+  machine chef_server_hostname
+  associate_to_vpc true
+  only_if { provisioning.driver == 'aws' }
+end
+
+machine supermarket_server_hostname do
+  chef_server lazy { chef_server_config }
   files lazy {
     {
       "/etc/chef/trusted_certs/#{chef_server_fqdn}.crt" =>
@@ -53,7 +64,7 @@ machine supermarket_server_hostname do
     add_machine_options option
   end
   common_provisioning_recipes.each { |r| recipe r }
-  recipe 'server-provisioning::supermarket'
+  recipe 'provisioning::supermarket'
   attributes lazy { supermarket_config }
   converge true
   action :converge

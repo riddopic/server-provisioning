@@ -23,18 +23,21 @@ default['chef-server-12']['analytics'] = nil
 # Supermarket Server Parameters
 default['chef-server-12']['supermarket'] = nil
 
-# Chef Server Oranization and User
 default['chef-server-12']['provisioner_setup'] = true
 default['chef-server-12']['store_keys_databag'] = true
-default['chef-server-12']['provisioner']['ssl'] = true
-default['chef-server-12']['provisioner']['organization'] = 'chef_provisioner'
-default['chef-server-12']['provisioner']['org_longname'] = 'ChefDev Chops'
-default['chef-server-12']['provisioner']['user'] = 'provisioner'
-default['chef-server-12']['provisioner']['name'] = 'Provisioner'
-default['chef-server-12']['provisioner']['last_name'] = 'User'
-default['chef-server-12']['provisioner']['email'] = 'provisioner@example.com'
-default['chef-server-12']['provisioner']['password'] = 'provisioner'
-default['chef-server-12']['provisioner']['validator_pem'] = '/tmp/validator.pem'
-default['chef-server-12']['provisioner']['provisioner_pem'] = '/tmp/provisioner.pem'
-default['chef-server-12']['provisioner']['db'] = 'provisioner'
-default['chef-server-12']['provisioner']['item'] = 'provisioner_pem'
+
+# Chef Server Oranization and User
+default['chef-server-12']['provisioner'].tap do |provisioner|
+  provisioner['ssl']             = true
+  provisioner['organization']    = 'chef_provisioner'
+  provisioner['org_longname']    = 'Chef Provisioner'
+  provisioner['user']            = 'provisioner'
+  provisioner['name']            = 'Provisioning'
+  provisioner['last_name']       = 'User'
+  provisioner['email']           = 'provisioner@example.com'
+  provisioner['password']        = 'provisioner'
+  provisioner['validator_pem']   = '/tmp/validator.pem'
+  provisioner['provisioner_pem'] = '/tmp/provisioner.pem'
+  provisioner['databag']         = 'provisioner'
+  provisioner['item']            = 'provisioner_pem'
+end

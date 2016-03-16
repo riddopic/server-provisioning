@@ -1,6 +1,6 @@
 # encoding: UTF-8
 
-include_recipe 'server-provisioning::_settings'
+include_recipe 'provisioning::_settings'
 
 # Provision the Chef Server with an empty runlist, extract the primary ipaddress
 # to use as the hostname in the initial `/etc/opscode/chef-server.rb` file.
@@ -9,16 +9,20 @@ machine chef_server_hostname do
   provisioning.specific_machine_options('chef-server').each do |option|
     add_machine_options(option)
   end
-  Dir.glob("#{Chef::Config[:trusted_certs_dir]}/*").each do |cert|
-    file ::File.join('/etc/chef/trusted_certs', ::File.basename(cert)), cert
-  end
   action :converge
 end
 
 aws_eip_address 'chef-server-eip' do
-  machine lazy { chef_server_hostname }
+  machine chef_server_hostname
   associate_to_vpc true
   only_if { provisioning.driver == 'aws' }
+end
+
+machine chef_server_hostname do
+  Dir.glob("#{Chef::Config[:trusted_certs_dir]}/*").each do |cert|
+    file ::File.join('/etc/chef/trusted_certs', ::File.basename(cert)), cert
+  end
+  action :converge
 end
 
 directory provisioning_data_dir do
@@ -28,7 +32,7 @@ end
 
 # The password of the provisioning user
 file "#{provisioning_data_dir}/provisioning_password" do
-  mode '0644'
+  mode 00644
   content provisioning_password
   sensitive true
   action :create
@@ -41,12 +45,12 @@ machine chef_server_hostname do
     add_machine_options(option)
   end
   common_provisioning_recipes.each { |r| recipe r }
-  if node['server-provisioning']['chef-server']['existing']
+  if node['provisioning']['chef-server']['existing']
     recipe 'chef-server-12::provisioning_setup'
   else
     recipe 'chef-server-12'
   end
-  node['server-provisioning']['chef-server']['recipes'].each { |r| recipe r }
+  node['provisioning']['chef-server']['recipes'].each { |r| recipe r }
   attributes lazy { chef_server_attributes }
   converge true
   action :converge
@@ -80,9 +84,9 @@ machine_file '/tmp/provisioner.pem' do
 end
 
 # Workaround: Ensure that the "provisioner.pem" has the right permissions.
-# PR: https://github.com/chef/server-provisioning/issues/174
+# PR: https://github.com/chef/provisioning/issues/174
 file "#{provisioning_data_dir}/provisioner.pem" do
-  mode '0644'
+  mode 00644
 end
 
 # Generate a knife config file that points at the new Chef Server

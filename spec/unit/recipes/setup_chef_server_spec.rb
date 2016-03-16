@@ -2,10 +2,10 @@
 
 require 'spec_helper'
 
-describe 'server-provisioning::setup_chef_server' do
+describe 'provisioning::setup_chef_server' do
   let(:chef_run) do
     ChefSpec::SoloRunner.new do |node|
-      node.set['server-provisioning'] = cluster_data
+      node.set['provisioning'] = cluster_data
     end.converge(described_recipe)
   end
 
@@ -15,7 +15,7 @@ describe 'server-provisioning::setup_chef_server' do
   end
 
   it 'includes _settings recipe' do
-    expect(chef_run).to include_recipe('server-provisioning::_settings')
+    expect(chef_run).to include_recipe('provisioning::_settings')
   end
 
   it 'converge chef server machine' do

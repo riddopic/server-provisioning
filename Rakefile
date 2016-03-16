@@ -49,7 +49,7 @@ class ProvisioningEnvironment
       'json_class' => 'Chef::Environment',
       'chef_type' => 'environment',
       'override_attributes' => {
-        'server-provisioning' => {
+        'provisioning' => {
           'id' => @cluster_id,
           'driver' => @driver_name,
           @driver_name => @driver,
@@ -122,7 +122,7 @@ end
 
 def chef_zero(recipe)
   validate_environment
-  succeed = system "chef exec chef-client -z -o server-provisioning::#{recipe} -E #{ENV['CHEF_ENV']}"
+  succeed = system "chef exec chef-client -z -o provisioning::#{recipe} -E #{ENV['CHEF_ENV']}"
   raise 'Failed executing ChefZero run' unless succeed
 end
 
@@ -247,6 +247,7 @@ namespace :setup do
     case options['driver_name']
     when 'aws'
       options['chef_server']['flavor'] = ask_for('Flavor', 'c3.xlarge')
+      options['chef_server']['aws_tags'] = { 'cookbook' => 'provisioning' }
     when 'ssh'
       options['chef_server']['existing'] = ask_for('Use existing chef-server?', 'no')
       options['chef_server']['host'] = ask_for('Host', '33.33.33.10')
@@ -264,6 +265,7 @@ namespace :setup do
       case options['driver_name']
       when 'aws'
         options['analytics']['flavor'] = ask_for('Flavor', 'c3.xlarge')
+        options['analytics']['aws_tags'] = { 'cookbook' => 'provisioning' }
       when 'ssh'
         options['analytics']['host'] = ask_for('Host', '33.33.33.12')
       when 'vagrant'
@@ -280,6 +282,7 @@ namespace :setup do
       case options['driver_name']
       when 'aws'
         options['supermarket']['flavor'] = ask_for('Flavor', 'c3.xlarge')
+        options['supermarket']['aws_tags'] = { 'cookbook' => 'provisioning' }
       when 'ssh'
         options['supermarket']['host'] = ask_for('Host', '33.33.33.13')
       when 'vagrant'
@@ -317,6 +320,9 @@ namespace :setup do
 
     msg "Current chef environment => #{ENV['CHEF_ENV_FILE']}"
     validate_environment
+
+    # msg 'Setup the Provisioning Infrastructure, Network and Environment'
+    # chef_zero 'setup_aws_vpc'
   end
 
   desc 'Setup the Chef Infrastructure Provisioning Environment'

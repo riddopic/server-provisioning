@@ -20,8 +20,8 @@ module Server
         @provisioning_password ||= begin
           if File.exist?("#{Server::Helpers.provisioning_data_dir(node)}/provisioning_password")
             File.read("#{Server::Helpers.provisioning_data_dir(node)}/provisioning_password")
-          elsif node['server-provisioning']['chef-server']['provisioning_password']
-            node['server-provisioning']['chef-server']['provisioning_password']
+          elsif node['provisioning']['chef-server']['provisioning_password']
+            node['provisioning']['chef-server']['provisioning_password']
           else
             SecureRandom.base64(20)
           end
@@ -66,7 +66,7 @@ module Server
       # @param node [Chef::Node] Chef Node object
       # @return [String] chef-server url
       def chef_server_url(node)
-        "https://#{chef_server_fqdn(node)}/organizations/#{node['server-provisioning']['chef-server']['organization']}"
+        "https://#{chef_server_fqdn(node)}/organizations/#{node['provisioning']['chef-server']['organization']}"
       end
 
       # Generates the Chef Server Attributes
@@ -77,13 +77,13 @@ module Server
         @chef_server_attributes = {
           'chef-server-12' => {
             'provisioner' => {
-              'organization' => node['server-provisioning']['chef-server']['organization'],
+              'organization' => node['provisioning']['chef-server']['organization'],
               'password' => provisioning_password(node)
             },
             'api_fqdn' => chef_server_fqdn(node),
             'store_keys_databag' => false,
             'plugin' => {
-              'reporting' => node['server-provisioning']['chef-server']['enable-reporting']
+              'reporting' => node['provisioning']['chef-server']['enable-reporting']
             }
           }
         }

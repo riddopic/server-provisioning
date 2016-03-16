@@ -2,10 +2,10 @@
 
 require 'spec_helper'
 
-describe 'server-provisioning::analytics' do
+describe 'provisioning::analytics' do
   let(:chef_run) do
     ChefSpec::SoloRunner.new do |node|
-      node.set['server-provisioning'] = cluster_data
+      node.set['provisioning'] = cluster_data
     end.converge(described_recipe)
   end
 

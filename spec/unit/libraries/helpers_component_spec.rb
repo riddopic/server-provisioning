@@ -5,7 +5,7 @@ require 'spec_helper'
 describe Server::Helpers::Component do
   let(:node) { Chef::Node.new }
   before do
-    node.default['server-provisioning'] = cluster_data
+    node.default['provisioning'] = cluster_data
     allow(Chef::Node).to receive(:load).and_return(Chef::Node.new)
     allow(Chef::ServerAPI).to receive(:new).and_return(rest)
     allow_any_instance_of(Chef::ServerAPI).to receive(:get)
@@ -50,11 +50,11 @@ describe Server::Helpers::Component do
 
     context 'is NOT speficied and host' do
       before do
-        node.default['server-provisioning']['chef-server']['fqdn'] = nil
-        node.default['server-provisioning']['provisioner']['fqdn']    = nil
-        node.default['server-provisioning']['supermarket']['fqdn'] = nil
-        node.default['server-provisioning']['analytics']['fqdn']   = nil
-        node.default['server-provisioning']['splunk']['fqdn']      = nil
+        node.default['provisioning']['chef-server']['fqdn'] = nil
+        node.default['provisioning']['provisioner']['fqdn']    = nil
+        node.default['provisioning']['supermarket']['fqdn'] = nil
+        node.default['provisioning']['analytics']['fqdn']   = nil
+        node.default['provisioning']['splunk']['fqdn']      = nil
       end
 
       context 'does exist' do
@@ -81,13 +81,13 @@ describe Server::Helpers::Component do
 
       context 'does NOT exist' do
         before do
-          node.default['server-provisioning']['chef-server']['host'] = nil
-          node.default['server-provisioning']['provisioner']['host']    = nil
-          node.default['server-provisioning']['supermarket']['host'] = nil
-          node.default['server-provisioning']['analytics']['host']   = nil
-          node.default['server-provisioning']['splunk']['host']      = nil
-          node.default['server-provisioning']['driver'] = 'ssh'
-          node.default['server-provisioning']['ssh'] = ssh_data
+          node.default['provisioning']['chef-server']['host'] = nil
+          node.default['provisioning']['provisioner']['host']    = nil
+          node.default['provisioning']['supermarket']['host'] = nil
+          node.default['provisioning']['analytics']['host']   = nil
+          node.default['provisioning']['splunk']['host']      = nil
+          node.default['provisioning']['driver'] = 'ssh'
+          node.default['provisioning']['ssh'] = ssh_data
         end
 
         it 'return chef-server component ip_address' do
@@ -128,11 +128,11 @@ describe Server::Helpers::Component do
 
     context 'is configured' do
       before do
-        node.default['server-provisioning']['chef-server']['hostname'] = 'my-cool-hostname.chef-server.com'
-        node.default['server-provisioning']['provisioner']['hostname']    = 'my-cool-hostname.provisioner.com'
-        node.default['server-provisioning']['supermarket']['hostname'] = 'my-cool-hostname.supermarket.com'
-        node.default['server-provisioning']['analytics']['hostname']   = 'my-cool-hostname.analytics.com'
-        node.default['server-provisioning']['splunk']['hostname']      = 'my-cool-hostname.splunk.com'
+        node.default['provisioning']['chef-server']['hostname'] = 'my-cool-hostname.chef-server.com'
+        node.default['provisioning']['provisioner']['hostname']    = 'my-cool-hostname.provisioner.com'
+        node.default['provisioning']['supermarket']['hostname'] = 'my-cool-hostname.supermarket.com'
+        node.default['provisioning']['analytics']['hostname']   = 'my-cool-hostname.analytics.com'
+        node.default['provisioning']['splunk']['hostname']      = 'my-cool-hostname.splunk.com'
       end
 
       %w( chef-server provisioner supermarket analytics splunk ).each do |component|
@@ -151,12 +151,12 @@ describe Server::Helpers::Component do
 
   context 'when the component attributes are not set' do
     before do
-      node.default['server-provisioning']['chef-server']  = nil
-      node.default['server-provisioning']['provisioner']     = nil
-      node.default['server-provisioning']['supermarket']  = nil
-      node.default['server-provisioning']['analytics']    = nil
-      node.default['server-provisioning']['splunk']       = nil
-      node.default['server-provisioning']['builders']     = nil
+      node.default['provisioning']['chef-server']  = nil
+      node.default['provisioning']['provisioner']     = nil
+      node.default['provisioning']['supermarket']  = nil
+      node.default['provisioning']['analytics']    = nil
+      node.default['provisioning']['splunk']       = nil
+      node.default['provisioning']['builders']     = nil
     end
 
     %w( chef-server provisioner supermarket analytics splunk builders ).each do |component|

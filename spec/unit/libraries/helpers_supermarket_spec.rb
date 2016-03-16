@@ -23,7 +23,7 @@ describe Server::Helpers::Supermarket do
   end
 
   before do
-    node.default['server-provisioning'] = cluster_data
+    node.default['provisioning'] = cluster_data
     allow(FileUtils).to receive(:touch).and_return(true)
     allow(Chef::Node).to receive(:load).and_return(Chef::Node.new)
     allow(Chef::ServerAPI).to receive(:new).and_return(rest)
@@ -111,7 +111,7 @@ describe Server::Helpers::Supermarket do
   end
 
   context 'when supermarket attributes are not set' do
-    before { node.default['server-provisioning']['supermarket'] = nil }
+    before { node.default['provisioning']['supermarket'] = nil }
 
     it 'raise an error' do
       expect { described_class.supermarket_server_hostname(node) }.to raise_error(RuntimeError)

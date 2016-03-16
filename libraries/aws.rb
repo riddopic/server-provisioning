@@ -19,9 +19,12 @@ module Server
       def initialize(node)
         require 'chef/provisioning/aws_driver'
 
-        Server::Helpers.check_attribute?(node['server-provisioning'][driver], "node['server-provisioning']['#{driver}']")
+        Server::Helpers.check_attribute?(
+          node['provisioning'][driver],
+          "node['provisioning']['#{driver}']"
+        )
         @node = node
-        @driver_hash = @node['server-provisioning'][driver]
+        @driver_hash = @node['provisioning'][driver]
 
         @driver_hash.each do |attr, value|
           singleton_class.class_eval { attr_accessor attr }
@@ -43,18 +46,19 @@ module Server
           bootstrap_options: {
             instance_type: @flavor,
             key_name: @key_name,
-            subnet_id: @subnet_id,
             security_group_ids: @security_group_ids,
           },
           ssh_username: @ssh_username,
-          aws_tags: @tags,
           image_id: @image_id,
           use_private_ip_for_ssh: @use_private_ip_for_ssh
         }
 
         # Add any optional machine options
         require 'chef/mixin/deep_merge'
-        opts = Chef::Mixin::DeepMerge.hash_only_merge(opts, bootstrap_options: { subnet_id: @subnet_id }) if @subnet_id
+        if @subnet_id
+          opts = Chef::Mixin::DeepMerge.hash_only_merge(opts,
+            bootstrap_options: { subnet_id: @subnet_id })
+        end
 
         opts
       end
@@ -65,13 +69,12 @@ module Server
       # @param count [Integer] component number
       # @return [Array] specific machine_options for the specific component
       def specific_machine_options(component, _count = nil)
-        return [] unless @node['server-provisioning'][component]
+        return [] unless @node['provisioning'][component]
         options = []
-        options << { bootstrap_options: { instance_type: @node['server-provisioning'][component]['flavor'] } } if @node['server-provisioning'][component]['flavor']
-        options << { bootstrap_options: { subnet_id: @node['server-provisioning'][component]['subnet_id'] } } if @node['server-provisioning'][component]['subnet_id']
-        options << { bootstrap_options: { security_group_ids: @node['server-provisioning'][component]['security_group_ids'] } } if @node['server-provisioning'][component]['security_group_ids']
-        options << { image_id: @node['server-provisioning'][component]['image_id'] } if @node['server-provisioning'][component]['image_id']
-        options << { aws_tags: @node['server-provisioning'][component]['aws_tags'] } if @node['server-provisioning'][component]['aws_tags']
+        options << { bootstrap_options: { instance_type: @node['provisioning'][component]['flavor'] } } if @node['provisioning'][component]['flavor']
+        options << { bootstrap_options: { security_group_ids: @node['provisioning'][component]['security_group_ids'] } } if @node['provisioning'][component]['security_group_ids']
+        options << { image_id: @node['provisioning'][component]['image_id'] } if @node['provisioning'][component]['image_id']
+        options << { aws_tags: @node['provisioning'][component]['aws_tags'] } if @node['provisioning'][component]['aws_tags']
         # Specify more specific machine_options to add
         options
       end

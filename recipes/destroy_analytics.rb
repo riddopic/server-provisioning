@@ -1,6 +1,6 @@
 # encoding: UTF-8
 
-include_recipe 'server-provisioning::_settings'
+include_recipe 'provisioning::_settings'
 
 # If Analytics is enabled
 if analytics_enabled?
@@ -12,6 +12,12 @@ if analytics_enabled?
 
     # Destroy Analytics Server
     machine analytics_server_hostname do
+      action :destroy
+    end
+
+    # Destroy the EIP when using the AWS driver
+    aws_eip_address 'analytics-eip' do
+      ignore_failure true
       action :destroy
     end
 

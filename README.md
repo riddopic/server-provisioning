@@ -1,4 +1,4 @@
-# `server-provisioning`
+# `provisioning`
 
 This cookbook can generate a Chef Infrastructure Provisioning Environment using a minimal CentOS or Ubuntu image. This cookbook will setup a Chef server and related components and includes:
 
@@ -95,7 +95,7 @@ That will provision and activate Analytics on your entire cluster.
 
 # Available Provisioning Methods
 
-This cookbook uses [chef-provisioning](https://github.com/chef/chef-provisioning) to manipulate the infrastructure acting as the orchestrator, it uses the default driver `vagrant` but you can switch drivers by modifying the attribute `['server-provisioning']['driver']`
+This cookbook uses [chef-provisioning](https://github.com/chef/chef-provisioning) to manipulate the infrastructure acting as the orchestrator, it uses the default driver `vagrant` but you can switch drivers by modifying the attribute `['provisioning']['driver']`
 
 The available drivers that you can use are:
 
@@ -120,7 +120,7 @@ Here is an example of the environment file using the vagrant driver.
   "json_class": "Chef::Environment",
   "chef_type": "environment",
   "override_attributes": {
-    "server-provisioning": {
+    "provisioning": {
       "id": "test",
       "driver": "vagrant",
       "vagrant": {
@@ -207,7 +207,7 @@ Here is an example of how you specify them
   "json_class": "Chef::Environment",
   "chef_type": "environment",
   "override_attributes": {
-    "server-provisioning": {
+    "provisioning": {
       "id": "aws",
       "driver": "aws",
       "aws": {
@@ -241,7 +241,7 @@ Here is an example of how you specify them
 
 ### SSH Driver
 
-This driver will NOT provision any infrastrucute. It assumes you have already provisioned the machines and it will manipulate then to install and configure the your Chef infrastructure".
+This driver will NOT provision any infrastructure. It assumes you have already provisioned the machines and it will manipulate then to install and configure the your Chef infrastructure".
 
 You have to provide:
 
@@ -258,7 +258,7 @@ The list of attributes that you have available are:
 | `chef_version`           | The chef version to install on the machine. |
 | `key_file`               | The SSH Key to use to connect to the machines.   |
 | `password`               | The password to use to connect to the machines.  |
-| `prefix`                 | Prefix to add at the bigining of any ssh-command.|
+| `prefix`                 | Prefix to add at the beginning of any ssh-command.|
 | `bootstrap_proxy`        | Automatically configure HTTPS proxy. |
 | `install_sh_path`        | Installation path of the shell script to install chef.|
 | `use_private_ip_for_ssh` | Set to `true` if you want to use the private  ipaddress. |
@@ -272,7 +272,7 @@ This is an example of how to specify this information
   "description": "Chef Infrastructure Provisioning Environment",
   "chef_type": "environment",
   "override_attributes": {
-    "server-provisioning": {
+    "provisioning": {
       "id": "ssh",
       "driver": "ssh",
       "ssh": {
@@ -312,12 +312,12 @@ As an example:
 This attribute would look like:
 
 ```
-default['server-provisioning']['common_cluster_recipes'] = ['security_policies::lock_root_login']
+default['provisioning']['common_cluster_recipes'] = ['security_policies::lock_root_login']
 ```
 
 # Specific Attributes per Component
 
-There are aditional specific attributes per component that you can use to configure your cluster
+There are additional specific attributes per component that you can use to configure your cluster
 in different ways.
 
 ### Chef Server Settings

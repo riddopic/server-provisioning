@@ -14,13 +14,14 @@ module Server
     # Retrive the common provisioning recipes.
     #
     def common_provisioning_recipes(node)
-      default_provisioning_recipes + node['server-provisioning']['common_provisioning_recipes']
+      default_provisioning_recipes +
+        node['provisioning']['common_provisioning_recipes']
     end
 
     # Retrive the default provisioning recipes.
     #
     def default_provisioning_recipes
-      ['server-provisioning::pkg_repo_management']
+      ['provisioning::pkg_repo_management']
     end
 
     # Provisioning Driver Instance
@@ -28,8 +29,11 @@ module Server
     # @param node [Chef::Node] Chef Node object
     # @return [Server::Provisioning::Base] provisioning driver instance
     def provisioning(node)
-      check_attribute?(node['server-provisioning']['driver'], "node['server-provisioning']['driver']")
-      @provisioning ||= Server::Provisioning.driver(node['server-provisioning']['driver'], node)
+      check_attribute?(
+        node['provisioning']['driver'],
+        "node['provisioning']['driver']")
+      @provisioning ||=
+        Server::Provisioning.driver(node['provisioning']['driver'], node)
     end
 
     # The current directory PATH from `.chef/knife.rb`
@@ -59,8 +63,8 @@ module Server
     # @param node [Chef::Node] Chef Node object
     # @return [Bool] True if we need to use the private ip for ssh, False if not
     def use_private_ip_for_ssh(node)
-      check_attribute?(node['server-provisioning']['driver'], "node['server-provisioning']['driver']")
-      node['server-provisioning'][node['server-provisioning']['driver']]['use_private_ip_for_ssh']
+      check_attribute?(node['provisioning']['driver'], "node['provisioning']['driver']")
+      node['provisioning'][node['provisioning']['driver']]['use_private_ip_for_ssh']
     end
 
     # Get the IP address from the Provisioning Abstraction
@@ -70,7 +74,9 @@ module Server
     #   machine we would like to get the ipaddress from
     # @return [String] ip address
     def get_ip(node, machine_node)
-      machine_node = Chef::Node.json_create(machine_node) if machine_node.class.eql?(Hash)
+      if machine_node.class.eql?(Hash)
+        machine_node = Chef::Node.json_create(machine_node)
+      end
       provisioning(node).ipaddress(machine_node)
     end
 
@@ -89,12 +95,12 @@ module Server
     # @param node [Chef::Node] Chef Node object
     # @return [String] provisioning id
     def chef_provisioning_id(node)
-      unless node['server-provisioning']['id']
-        node.set['server-provisioning']['id'] = "test-#{SecureRandom.hex(3)}"
+      unless node['provisioning']['id']
+        node.set['provisioning']['id'] = "test-#{SecureRandom.hex(3)}"
         node.save
       end
 
-      node['server-provisioning']['id']
+      node['provisioning']['id']
     end
 
     # Encrypted Data Bag Secret
@@ -125,7 +131,7 @@ module Server
         client_key: "#{provisioning_data_dir(node)}/provisioner.pem",
         analytics_server_url: if Server::Helpers::Analytics.analytics_enabled?(node)
                                 "https://#{Server::Helpers::Analytics.analytics_server_fqdn(node)}/organizations" \
-                                "/#{node['server-provisioning']['chef-server']['organization']}"
+                                "/#{node['provisioning']['chef-server']['organization']}"
                               else
                                 ''
                               end,
@@ -145,6 +151,18 @@ module Server
     # @param attr_name [String] name of the attribute
     def check_attribute?(attr_value, attr_name)
       raise Chef::Exceptions::AttributeNotFound, attr_name if attr_value.nil?
+    end
+
+    # Return a common set of instance tags.
+    #
+    # @param [Strin] chef_type of the instance being tagged
+    # @return [Hash] instance tags
+    def generate_tags(tag = nil)
+      tag = tag ? { 'Name' => tag } : nil
+      { 'cookbook' => 'provisioning',
+        'launched_by' => ENV['USER'],
+        'launched_at' => Time.new.strftime("%A, %d %b %Y %l:%M %p %Z")
+      }.merge(tag)
     end
   end
 
@@ -203,6 +221,11 @@ module Server
     # Generate Knife Variables
     def knife_variables
       Server::Helpers.knife_variables(node)
+    end
+
+    # Generate instance tags
+    def generate_tags(tag = nil)
+      Server::Helpers.generate_tags(tag)
     end
   end
 end

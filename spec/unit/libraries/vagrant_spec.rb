@@ -7,7 +7,7 @@ describe Server::Provisioning::Vagrant do
   let(:vagrant_object) { described_class.new(node) }
 
   before do
-    node.default['server-provisioning'] = {}
+    node.default['provisioning'] = {}
     node.default['ipaddress'] = '10.1.1.2'
   end
 
@@ -19,7 +19,7 @@ describe Server::Provisioning::Vagrant do
 
   context 'when driver attributes are implemented' do
     before do
-      node.default['server-provisioning']['vagrant'] = vagrant_data
+      node.default['provisioning']['vagrant'] = vagrant_data
     end
 
     it 'returns the right driver name' do

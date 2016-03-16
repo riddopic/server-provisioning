@@ -7,7 +7,7 @@ describe Server::Provisioning::Aws do
   let(:aws_object) { described_class.new(node) }
 
   before do
-    node.default['server-provisioning']   = {}
+    node.default['provisioning']   = {}
     node.default['ec2']['local_ipv4']  = '10.223.1.33'
     node.default['ec2']['public_ipv4'] = '192.168.1.2'
   end
@@ -20,7 +20,7 @@ describe Server::Provisioning::Aws do
 
   context 'when driver attributes are implemented' do
     before do
-      node.default['server-provisioning']['aws'] = aws_data
+      node.default['provisioning']['aws'] = aws_data
     end
 
     it 'returns the right driver name' do
@@ -57,7 +57,7 @@ describe Server::Provisioning::Aws do
 
     context 'and we set use_private_ip_for_ssh to false ' do
       before do
-        node.default['server-provisioning']['aws']['use_private_ip_for_ssh'] = false
+        node.default['provisioning']['aws']['use_private_ip_for_ssh'] = false
       end
 
       it 'returns the public_ipaddress' do
@@ -67,8 +67,8 @@ describe Server::Provisioning::Aws do
 
     context 'and components has specific attributes' do
       before do
-        node.default['server-provisioning'] = cluster_data
-        node.default['server-provisioning']['aws'] = aws_data
+        node.default['provisioning'] = cluster_data
+        node.default['provisioning']['aws'] = aws_data
       end
 
       it 'returns the right specific_machine_options for chef_server' do

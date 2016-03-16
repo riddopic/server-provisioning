@@ -19,10 +19,10 @@ module Server
       def initialize(node)
         require 'chef/provisioning/vagrant_driver'
 
-        Server::Helpers.check_attribute?(node['server-provisioning'][driver], "node['server-provisioning']['#{driver}']")
+        Server::Helpers.check_attribute?(node['provisioning'][driver], "node['provisioning']['#{driver}']")
         @node = node
         @prefix = 'sudo '
-        @driver_hash = @node['server-provisioning'][driver]
+        @driver_hash = @node['provisioning'][driver]
         @use_private_ip_for_ssh = false
 
         @driver_hash.each do |attr, value|
@@ -69,31 +69,31 @@ module Server
       # @param count [Integer] component number
       # @return [Array] specific machine_options for the specific component
       def specific_machine_options(component, count = nil)
-        return [] unless @node['server-provisioning'][component]
+        return [] unless @node['provisioning'][component]
         options = []
         if count
-          Server::Helpers.check_attribute?(@node['server-provisioning'][component][count.to_s], "node['server-provisioning']['#{driver}']['#{count}']")
-          options << { vagrant_options: { 'vm.hostname' => @node['server-provisioning'][component][count.to_s]['vm_hostname'] } } if @node['server-provisioning'][component][count.to_s]['vm_hostname']
-          options << { vagrant_options: { 'vm.box' => @node['server-provisioning'][component][count.to_s]['vm_box'] } } if @node['server-provisioning'][component][count.to_s]['vm_box']
-          options << { vagrant_options: { 'vm.box_url' => @node['server-provisioning'][component][count.to_s]['image_url'] } } if @node['server-provisioning'][component][count.to_s]['image_url']
-          options << { vagrant_options: { 'vm.network' => @node['server-provisioning'][component][count.to_s]['network'] } } if @node['server-provisioning'][component][count.to_s]['network']
+          Server::Helpers.check_attribute?(@node['provisioning'][component][count.to_s], "node['provisioning']['#{driver}']['#{count}']")
+          options << { vagrant_options: { 'vm.hostname' => @node['provisioning'][component][count.to_s]['vm_hostname'] } } if @node['provisioning'][component][count.to_s]['vm_hostname']
+          options << { vagrant_options: { 'vm.box' => @node['provisioning'][component][count.to_s]['vm_box'] } } if @node['provisioning'][component][count.to_s]['vm_box']
+          options << { vagrant_options: { 'vm.box_url' => @node['provisioning'][component][count.to_s]['image_url'] } } if @node['provisioning'][component][count.to_s]['image_url']
+          options << { vagrant_options: { 'vm.network' => @node['provisioning'][component][count.to_s]['network'] } } if @node['provisioning'][component][count.to_s]['network']
           options << { vagrant_config: <<-ENDCONFIG.gsub(/^ {10}/, '')
-            config.vm.network(#{@node['server-provisioning'][component][count.to_s]['network']})
+            config.vm.network(#{@node['provisioning'][component][count.to_s]['network']})
             config.vm.provider :virtualbox do |v|
-              v.customize ["modifyvm", :id,'--memory', #{@node['server-provisioning'][component][count.to_s]['vm_memory']}]
-              v.customize ["modifyvm", :id, '--cpus', #{@node['server-provisioning'][component][count.to_s]['vm_cpus']}]
+              v.customize ["modifyvm", :id,'--memory', #{@node['provisioning'][component][count.to_s]['vm_memory']}]
+              v.customize ["modifyvm", :id, '--cpus', #{@node['provisioning'][component][count.to_s]['vm_cpus']}]
             end
             ENDCONFIG
           }
         else
-          options << { vagrant_options: { 'vm.hostname' => @node['server-provisioning'][component]['vm_hostname'] } } if @node['server-provisioning'][component]['vm_hostname']
-          options << { vagrant_options: { 'vm.box' => @node['server-provisioning'][component]['vm_box'] } } if @node['server-provisioning'][component]['vm_box']
-          options << { vagrant_options: { 'vm.box_url' => @node['server-provisioning'][component]['image_url'] } } if @node['server-provisioning'][component]['image_url']
-          options << { vagrant_options: { 'vm.network' => @node['server-provisioning'][component]['network'] } } if @node['server-provisioning'][component]['network']
+          options << { vagrant_options: { 'vm.hostname' => @node['provisioning'][component]['vm_hostname'] } } if @node['provisioning'][component]['vm_hostname']
+          options << { vagrant_options: { 'vm.box' => @node['provisioning'][component]['vm_box'] } } if @node['provisioning'][component]['vm_box']
+          options << { vagrant_options: { 'vm.box_url' => @node['provisioning'][component]['image_url'] } } if @node['provisioning'][component]['image_url']
+          options << { vagrant_options: { 'vm.network' => @node['provisioning'][component]['network'] } } if @node['provisioning'][component]['network']
           options << { vagrant_config: <<-ENDCONFIG.gsub(/^ {10}/, '')
             config.vm.provider :virtualbox do |v|
-              v.customize ["modifyvm", :id,'--memory', #{@node['server-provisioning'][component]['vm_memory']}]
-              v.customize ["modifyvm", :id, '--cpus', #{@node['server-provisioning'][component]['vm_cpus']}]
+              v.customize ["modifyvm", :id,'--memory', #{@node['provisioning'][component]['vm_memory']}]
+              v.customize ["modifyvm", :id, '--cpus', #{@node['provisioning'][component]['vm_cpus']}]
             end
             ENDCONFIG
           }

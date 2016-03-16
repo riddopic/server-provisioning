@@ -95,7 +95,7 @@ module SharedCommonData
   let(:chef_node) do
     {
       'normal' => {
-        'server-provisioning' => {
+        'provisioning' => {
           'driver' => 'ssh',
           'ssh' => {}
         },
@@ -107,7 +107,7 @@ module SharedCommonData
   let(:supermarket_node) do
     {
       'normal' => {
-        'server-provisioning' => {
+        'provisioning' => {
           'driver' => 'aws',
           'aws' => {}
         },
@@ -122,7 +122,7 @@ module SharedCommonData
   let(:analytics_node) do
     {
       'normal' => {
-        'server-provisioning' => {
+        'provisioning' => {
           'driver' => 'ssh',
           'ssh' => {}
         },

@@ -2,10 +2,10 @@
 
 require 'spec_helper'
 
-describe 'server-provisioning::destroy_all' do
+describe 'provisioning::destroy_all' do
   let(:chef_run) do
     ChefSpec::SoloRunner.new do |node|
-      node.set['server-provisioning'] = cluster_data
+      node.set['provisioning'] = cluster_data
     end
   end
 
@@ -23,7 +23,7 @@ describe 'server-provisioning::destroy_all' do
 
     includes.each do |recipename|
       it "includes #{recipename} recipe" do
-        expect(chef_run).to include_recipe("server-provisioning::#{recipename}")
+        expect(chef_run).to include_recipe("provisioning::#{recipename}")
       end
     end
   end

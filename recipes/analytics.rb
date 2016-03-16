@@ -3,8 +3,8 @@
 ingredient_config 'analytics' do
   config <<-EOF
 topology 'standalone'
-analytics_fqdn '#{node['server-provisioning']['analytics']['fqdn']}'
-features['integration'] = #{node['server-provisioning']['analytics']['features']}
+analytics_fqdn '#{node['provisioning']['analytics']['fqdn']}'
+features['integration'] = #{node['provisioning']['analytics']['features']}
 EOF
   action :add
 end

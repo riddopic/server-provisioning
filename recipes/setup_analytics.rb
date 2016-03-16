@@ -1,15 +1,28 @@
 # encoding: UTF-8
 
-include_recipe 'server-provisioning::_settings'
+include_recipe 'provisioning::_settings'
 
 # There are two ways to provision the Analytics Server
 #
-# 1) Provisioning the entire "server-provisioning::setup" or
-# 2) Just the Chef Server "server-provisioning::setup_chef_server"
+# 1) Provisioning the entire "provisioning::setup" or
+# 2) Just the Chef Server "provisioning::setup_chef_server"
 #
 # After that you are good to provision Analytics running:
-#   bundle exec chef-client -z -o server-provisioning::setup_analytics -E test
+#   bundle exec chef-client -z -o provisioning::setup_analytics -E test
 #
+machine analytics_server_hostname do
+  provisioning.specific_machine_options('analytics').each do |option|
+    add_machine_options(option)
+  end
+  action :converge
+end
+
+aws_eip_address 'analytics-eip' do
+  machine analytics_server_hostname
+  associate_to_vpc true
+  only_if { provisioning.driver == 'aws' }
+end
+
 machine analytics_server_hostname do
   chef_server lazy { chef_server_config }
   provisioning.specific_machine_options('analytics').each do |option|
@@ -53,7 +66,7 @@ machine analytics_server_hostname do
   provisioning.specific_machine_options('analytics').each do |option|
     add_machine_options option
   end
-  recipe 'server-provisioning::analytics'
+  recipe 'provisioning::analytics'
   files(
     '/etc/opscode-analytics/actions-source.json' =>
       "#{provisioning_data_dir}/actions-source.json",
@@ -62,10 +75,9 @@ machine analytics_server_hostname do
   )
   attributes lazy {
     {
-      'server-provisioning' => {
+      'provisioning' => {
         'analytics' => {
-          'fqdn' => analytics_server_fqdn,
-          'features' => splunk_enabled? ? 'true' : 'false'
+          'fqdn' => analytics_server_fqdn
         }
       }
     }

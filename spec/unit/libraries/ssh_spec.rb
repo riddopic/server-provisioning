@@ -7,7 +7,7 @@ describe Server::Provisioning::Ssh do
   let(:ssh_object) { described_class.new(node) }
 
   before do
-    node.default['server-provisioning'] = cluster_data
+    node.default['provisioning'] = cluster_data
     node.default['ipaddress'] = '33.33.33.10'
   end
 
@@ -19,7 +19,7 @@ describe Server::Provisioning::Ssh do
 
   context 'when driver attributes are implemented' do
     before do
-      node.default['server-provisioning']['ssh'] = ssh_data
+      node.default['provisioning']['ssh'] = ssh_data
     end
 
     it 'returns the right driver name' do
@@ -58,7 +58,7 @@ describe Server::Provisioning::Ssh do
 
     context 'and we specify both password and key_file' do
       before do
-        node.default['server-provisioning']['ssh']['password'] = 'sup3rs3cur3'
+        node.default['provisioning']['ssh']['password'] = 'sup3rs3cur3'
       end
 
       it 'raise an error' do
@@ -85,7 +85,7 @@ describe Server::Provisioning::Ssh do
 
       context 'with builders specs' do
         before do
-          node.default['server-provisioning']['builders']['1'] = { 'ip' => '33.33.33.20' }
+          node.default['provisioning']['builders']['1'] = { 'ip' => '33.33.33.20' }
         end
         it 'returns the ipaddress of the builder 1' do
           expect(ssh_object.specific_machine_options('builders', 1)).to eq(

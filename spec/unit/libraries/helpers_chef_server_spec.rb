@@ -41,8 +41,8 @@ describe Server::Helpers::ChefServer do
   end
 
   before do
-    node.default['server-provisioning'] = cluster_data
-    node.default['server-provisioning']['chef-server']['enable-reporting'] = true
+    node.default['provisioning'] = cluster_data
+    node.default['provisioning']['chef-server']['enable-reporting'] = true
     allow(Chef::Node).to receive(:load).and_return(Chef::Node.new)
     allow(Chef::ServerAPI).to receive(:new).and_return(rest)
     allow_any_instance_of(Chef::ServerAPI).to receive(:get)
@@ -132,7 +132,7 @@ describe Server::Helpers::ChefServer do
 
         context 'plus extra attributes that the user specified' do
           before do
-            node.default['server-provisioning']['chef-server']['attributes'] = extra_chef_server_attributes
+            node.default['provisioning']['chef-server']['attributes'] = extra_chef_server_attributes
           end
 
           it 'returns all of them plus the extra attributes' do
@@ -150,7 +150,7 @@ describe Server::Helpers::ChefServer do
   end
 
   context 'when chef-server attributes are not set' do
-    before { node.default['server-provisioning']['chef-server'] = nil }
+    before { node.default['provisioning']['chef-server'] = nil }
 
     it 'raise an error' do
       expect { described_class.chef_server_hostname(node) }.to raise_error(RuntimeError)

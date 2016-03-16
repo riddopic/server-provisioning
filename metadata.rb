@@ -1,6 +1,6 @@
 # encoding: UTF-8
 
-name 'server-provisioning'
+name 'provisioning'
 license 'Apache 2.0'
 version '0.1.0'
 maintainer 'Stefano Harding'
@@ -17,7 +17,7 @@ if defined?(:issues_url)
 end
 
 depends 'chef-server-12'
-depends 'chef-ingredient'
+depends 'chef-ingredient', '= 0.16.0'
 depends 'git'
 depends 'apt'
 depends 'yum'

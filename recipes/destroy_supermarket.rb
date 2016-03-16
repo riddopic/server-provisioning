@@ -1,6 +1,6 @@
 # encoding: UTF-8
 
-include_recipe 'server-provisioning::_settings'
+include_recipe 'provisioning::_settings'
 
 # If Supermarket is enabled
 if supermarket_enabled?
@@ -12,6 +12,12 @@ if supermarket_enabled?
 
     # Destroy Supermarket Server
     machine supermarket_server_hostname do
+      action :destroy
+    end
+
+    # Destroy the EIP when using the AWS driver
+    aws_eip_address 'supermarket-eip' do
+      ignore_failure true
       action :destroy
     end
 

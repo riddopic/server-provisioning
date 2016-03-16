@@ -34,10 +34,10 @@ ruby_block "upload provisioner key" do
 
     begin
       bag = Chef::DataBag.new
-      bag.name(node['chef-server-12']['provisioner']['db'])
+      bag.name(node['chef-server-12']['provisioner']['databag'])
       bag.create
     rescue Exception => e
-      puts "DataBag #{node['chef-server-12']['provisioner']['db']} already exists."
+      puts "DataBag #{node['chef-server-12']['provisioner']['databag']} already exists."
     end
 
     begin
@@ -45,7 +45,7 @@ ruby_block "upload provisioner key" do
         { "content" => File.read(node['chef-server-12']['provisioner']['provisioner_pem']) },
         Chef::Config.encrypted_data_bag_secret)
       provisioner_item = Chef::DataBagItem.from_hash({ "id" => node['chef-server-12']['provisioner']['item'] }.merge(data))
-      provisioner_item.data_bag(node['chef-server-12']['provisioner']['db'])
+      provisioner_item.data_bag(node['chef-server-12']['provisioner']['databag'])
       provisioner_item.save
     rescue Exception => e
       puts "Something went wrong with the data bag creation.\nERROR: #{e.message}"

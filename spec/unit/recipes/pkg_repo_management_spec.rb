@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-describe 'server-provisioning::pkg_repo_management' do
+describe 'provisioning::pkg_repo_management' do
   context 'debian systems' do
     let(:chef_run) do
       runner = ChefSpec::SoloRunner.new(

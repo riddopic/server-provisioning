@@ -6,7 +6,7 @@ describe Server::Helpers do
   let(:node) { Chef::Node.new }
 
   before do
-    node.default['server-provisioning'] = cluster_data
+    node.default['provisioning'] = cluster_data
     allow_any_instance_of(Chef::Node).to receive(:save).and_return(true)
     allow(Server::Helpers).to receive(:node).and_return(node)
     allow(Chef::Node).to receive(:load).and_return(Chef::Node.new)
@@ -42,7 +42,7 @@ describe Server::Helpers do
       end
     end
     context 'is NOT specified' do
-      before { node.default['server-provisioning']['id'] = nil }
+      before { node.default['provisioning']['id'] = nil }
 
       it 'create a chef_provisioning_id and return it' do
         expect(described_class.chef_provisioning_id(node)).not_to be nil
@@ -54,8 +54,8 @@ describe Server::Helpers do
   context 'when driver' do
     context 'SSH is specified' do
       before do
-        node.default['server-provisioning']['driver'] = 'ssh'
-        node.default['server-provisioning']['ssh'] = ssh_data
+        node.default['provisioning']['driver'] = 'ssh'
+        node.default['provisioning']['ssh'] = ssh_data
         Server::Helpers.instance_variable_set :@provisioning, nil
       end
 
@@ -78,8 +78,8 @@ describe Server::Helpers do
 
     context 'AWS is specified' do
       before do
-        node.default['server-provisioning']['driver'] = 'aws'
-        node.default['server-provisioning']['aws'] = aws_data
+        node.default['provisioning']['driver'] = 'aws'
+        node.default['provisioning']['aws'] = aws_data
         Server::Helpers.instance_variable_set :@provisioning, nil
       end
 
@@ -102,8 +102,8 @@ describe Server::Helpers do
 
     context 'VAGRANT is specified' do
       before do
-        node.default['server-provisioning']['driver'] = 'vagrant'
-        node.default['server-provisioning']['vagrant'] = vagrant_data
+        node.default['provisioning']['driver'] = 'vagrant'
+        node.default['provisioning']['vagrant'] = vagrant_data
         Server::Helpers.instance_variable_set :@provisioning, nil
       end
 

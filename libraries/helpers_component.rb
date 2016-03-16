@@ -35,8 +35,8 @@ module Server
       # @param component_node [Chef::Node] The Chef Node object of the component
       # @return [String]
       def component_fqdn(node, component, c_node = component_node(node, component))
-        node['server-provisioning'][component]['fqdn'] ||
-          node['server-provisioning'][component]['host'] ||
+        node['provisioning'][component]['fqdn'] ||
+          node['provisioning'][component]['host'] ||
           Server::Helpers.get_ip(node, c_node)
       end
 
@@ -49,8 +49,8 @@ module Server
       # @return [String]
       def component_hostname(node, component, id = nil)
         Server::Helpers.check_attribute?(
-          node['server-provisioning'][component],
-          "node['server-provisioning']['#{component}']"
+          node['provisioning'][component],
+          "node['provisioning']['#{component}']"
         )
         if id
           multiple_component_hostname(node, component, id)
@@ -69,7 +69,7 @@ module Server
       def single_component_hostname(node, component)
         unless hostname?(get_component(node, component))
           component_prefix = component.eql?('chef-server') ? 'chef-server' : "#{component}-server"
-          node.set['server-provisioning'][component]['hostname'] = "#{component_prefix}-#{Server::Helpers.chef_provisioning_id(node)}"
+          node.set['provisioning'][component]['hostname'] = "#{component_prefix}-#{Server::Helpers.chef_provisioning_id(node)}"
         end
 
         get_component(node, component)['hostname']
@@ -87,10 +87,10 @@ module Server
       # @return [String] component hostname
       def multiple_component_hostname(node, component, id)
         unless hostname?(get_component(node, component, id))
-          unless node['server-provisioning'][component]['hostname_prefix']
-            node.set['server-provisioning'][component]['hostname_prefix'] = "node-#{Server::Helpers.chef_provisioning_id(node)}"
+          unless node['provisioning'][component]['hostname_prefix']
+            node.set['provisioning'][component]['hostname_prefix'] = "node-#{Server::Helpers.chef_provisioning_id(node)}"
           end
-          node.set['server-provisioning'][component][id]['hostname'] = "#{node['server-provisioning'][component]['hostname_prefix']}-#{id}"
+          node.set['provisioning'][component][id]['hostname'] = "#{node['provisioning'][component]['hostname_prefix']}-#{id}"
         end
 
         get_component(node, component, id)['hostname']
@@ -112,10 +112,10 @@ module Server
       # @return [String] hostname
       def get_component(node, name, id = nil)
         if id
-          return {} unless node['server-provisioning'][name][id]
-          node['server-provisioning'][name][id]
+          return {} unless node['provisioning'][name][id]
+          node['provisioning'][name][id]
         else
-          node['server-provisioning'][name]
+          node['provisioning'][name]
         end
       end
 
@@ -128,7 +128,7 @@ module Server
       # @return [Hash] of attributes from a component
       #
       def component_attributes(node, name)
-        node['server-provisioning'][name]['attributes']
+        node['provisioning'][name]['attributes']
       rescue
         {}
       end
