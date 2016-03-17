@@ -4,6 +4,9 @@ require 'fileutils'
 require 'erb'
 require 'json'
 require 'chef-config/config'
+require 'colorize'
+require 'tty'
+require 'sgviz'
 
 # String Colorization
 class String
@@ -168,8 +171,12 @@ def ask_for(thing, default = nil)
   bool(stdin.empty? ? default : stdin)
 end
 
-def msg(string)
-  puts "\n#{string}\n".yellow
+def msg(text)
+  ttable = TTY::Table.new
+  ttable << [text]
+  renderer = TTY::Table::Renderer::Unicode.new(ttable)
+  renderer.border.style = :red
+  puts renderer.render
 end
 
 Rake::TaskManager.record_task_metadata = true
@@ -338,20 +345,25 @@ namespace :setup do
 
     msg "Current chef environment => #{ENV['CHEF_ENV_FILE']}"
     validate_environment
+  end
 
-    # msg 'Setup the Provisioning Infrastructure, Network and Environment'
-    # chef_zero 'setup_aws_vpc'
+  desc 'Terraform the Infrastructure, Network and Environment'
+  task :terraform do
+    msg 'Terraform the Infrastructure, Network and Environment'
+    Dir.chdir('terraform') do
+      sh("terraform plan && terraform apply")
+    end
   end
 
   desc 'Setup the Chef Infrastructure Provisioning Environment'
   task cluster: [:prerequisites] do
     msg 'Setup the Chef Infrastructure Provisioning Environment'
-    chef_zero 'setup'
+    system 'chef exec berks update'
   end
 
-  desc 'Setup a Chef Server'
+  desc 'Create a Chef Server'
   task :chef_server do
-    msg 'Create a Chef Server'
+    msg 'Setup a Chef Server'
     chef_zero 'setup_chef_server'
   end
 
@@ -394,6 +406,13 @@ namespace :destroy do
     chef_zero 'destroy_all'
   end
 
+  desc 'Destroy the Infrastructure, Network and Environment'
+  task :terraform do
+    Dir.chdir('terraform') do
+      sh("terraform destroy")
+    end
+  end
+
   desc 'Destroy Chef Compliance Server'
   task :compliance do
     chef_zero 'destroy_compliance'
@@ -420,6 +439,24 @@ namespace :info do
   task :list_core_services do
     system 'knife search node \'name:*server* OR name:node*\' -a ipaddress'
     puts "Chef Server URL: #{chef_server_url}"
+  end
+
+  desc 'Inspect state the Infrastructure, Network and Environment'
+  task :terraform do
+    Dir.chdir('terraform') do
+      sh("terraform show")
+    end
+  end
+
+  # brew install graphviz
+  desc 'Generate a graph of the VPC'
+  task :graph, :region, :vpc_id do |t, args|
+    sh <<-CMD
+    sgviz generate --output-path provisioned_vpc \
+                   --region #{args[:region]} \
+                   --vpc-ids #{args[:vpc_id]} && \
+    sgviz open --output-path provisioned_vpc --region #{args[:region]}
+    CMD
   end
 end
 
