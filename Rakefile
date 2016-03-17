@@ -56,6 +56,7 @@ class ProvisioningEnvironment
           'acl' => (@acl if @acl && ! @acl.empty?),
           'chef-server' => @chef_server,
           'analytics' => (@analytics if @analytics && ! @analytics.empty?),
+          'compliance' => (@compliance if @compliance && ! @compliance.empty?),
           'supermarket' => (@supermarket if @supermarket && ! @supermarket.empty?)
         }.delete_if { |_k, v| v.nil? }
       }
@@ -259,8 +260,8 @@ namespace :setup do
       options['chef_server']['vm_cpus'] = ask_for('Cpus allocation', '2')
     end
 
-    puts "\nAnalytics Server".pink
-    if ask_for('Enable Analytics?', 'no')
+    puts "\nChef Analytics Server".pink
+    if ask_for('Enable Chef Analytics?', 'no')
       options['analytics'] = {}
       case options['driver_name']
       when 'aws'
@@ -276,18 +277,35 @@ namespace :setup do
       end
     end
 
-    puts "\nSupermarket Server".pink
-    if ask_for('Enable Supermarket?', 'no')
+    puts "\nChef Compliance Server".pink
+    if ask_for('Enable Chef Compliance?', 'no')
+      options['analytics'] = {}
+      case options['driver_name']
+      when 'aws'
+        options['compliance']['flavor'] = ask_for('Flavor', 'c3.xlarge')
+        options['compliance']['aws_tags'] = { 'cookbook' => 'provisioning' }
+      when 'ssh'
+        options['compliance']['host'] = ask_for('Host', '33.33.33.13')
+      when 'vagrant'
+        options['compliance']['vm_hostname'] = 'compliance.example.com'
+        options['compliance']['network'] = ask_for('Network Config', ":private_network, {:ip => '33.33.33.13'}")
+        options['compliance']['vm_memory'] = ask_for('Memory allocation', '2048')
+        options['compliance']['vm_cpus'] = ask_for('Cpus allocation', '2')
+      end
+    end
+
+    puts "\nChef Supermarket Server".pink
+    if ask_for('Enable Chef Supermarket?', 'no')
       options['supermarket'] = {}
       case options['driver_name']
       when 'aws'
         options['supermarket']['flavor'] = ask_for('Flavor', 'c3.xlarge')
         options['supermarket']['aws_tags'] = { 'cookbook' => 'provisioning' }
       when 'ssh'
-        options['supermarket']['host'] = ask_for('Host', '33.33.33.13')
+        options['supermarket']['host'] = ask_for('Host', '33.33.33.14')
       when 'vagrant'
         options['supermarket']['vm_hostname'] = 'supermarket.example.com'
-        options['supermarket']['network'] = ask_for('Network Config', ":private_network, {:ip => '33.33.33.13'}")
+        options['supermarket']['network'] = ask_for('Network Config', ":private_network, {:ip => '33.33.33.14'}")
         options['supermarket']['vm_memory'] = ask_for('Memory allocation', '2048')
         options['supermarket']['vm_cpus'] = ask_for('Cpus allocation', '2')
       end
@@ -337,15 +355,21 @@ namespace :setup do
     chef_zero 'setup_chef_server'
   end
 
-  desc 'Activate Analytics Server'
+  desc 'Create a Chef Analytics Server'
   task analytics: [:chef_server] do
-    msg 'Setup Chef Infrastructure Analytics Environment'
+    msg 'Setup a Chef Analytics Server'
     chef_zero 'setup_analytics'
+  end
+
+  desc 'Create a Chef Compliance Server'
+  task compliance: [:chef_server] do
+    msg 'Setup a Chef Compliance Server'
+    chef_zero 'setup_compliance'
   end
 
   desc 'Create a Supermarket Server'
   task supermarket: [:chef_server] do
-    msg 'Setup Supermarket Server to resolve cookbook dependencies'
+    msg 'Setup a Chef Supermarket Server'
     chef_zero 'setup_supermarket'
   end
 end
@@ -370,12 +394,17 @@ namespace :destroy do
     chef_zero 'destroy_all'
   end
 
-  desc 'Destroy Analytics Server'
+  desc 'Destroy Chef Compliance Server'
+  task :compliance do
+    chef_zero 'destroy_compliance'
+  end
+
+  desc 'Destroy Chef Analytics Server'
   task :analytics do
     chef_zero 'destroy_analytics'
   end
 
-  desc 'Destroy Supermarket Server'
+  desc 'Destroy Chef Supermarket Server'
   task :supermarket do
     chef_zero 'destroy_supermarket'
   end

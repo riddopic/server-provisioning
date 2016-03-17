@@ -71,10 +71,26 @@ module Server
       def specific_machine_options(component, _count = nil)
         return [] unless @node['provisioning'][component]
         options = []
-        options << { bootstrap_options: { instance_type: @node['provisioning'][component]['flavor'] } } if @node['provisioning'][component]['flavor']
-        options << { bootstrap_options: { security_group_ids: @node['provisioning'][component]['security_group_ids'] } } if @node['provisioning'][component]['security_group_ids']
-        options << { image_id: @node['provisioning'][component]['image_id'] } if @node['provisioning'][component]['image_id']
-        options << { aws_tags: @node['provisioning'][component]['aws_tags'] } if @node['provisioning'][component]['aws_tags']
+        if @node['provisioning'][component]['flavor']
+          options << {
+            bootstrap_options: {
+              instance_type: @node['provisioning'][component]['flavor']
+            }
+          }
+        end
+        if @node['provisioning'][component]['security_group_ids']
+          options << {
+            bootstrap_options: {
+              security_group_ids: @node['provisioning'][component]['security_group_ids']
+            }
+          }
+        end
+        if @node['provisioning'][component]['image_id']
+          options << { image_id: @node['provisioning'][component]['image_id'] }
+        end
+        if @node['provisioning'][component]['aws_tags']
+          options << { aws_tags: @node['provisioning'][component]['aws_tags'] }
+        end
         # Specify more specific machine_options to add
         options
       end

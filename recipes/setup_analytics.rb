@@ -11,18 +11,6 @@ include_recipe 'provisioning::_settings'
 #   bundle exec chef-client -z -o provisioning::setup_analytics -E test
 #
 machine analytics_server_hostname do
-  provisioning.specific_machine_options('analytics').each do |option|
-    add_machine_options(option)
-  end
-  action :converge
-end
-
-aws_eip_address 'analytics-eip' do
-  machine analytics_server_hostname
-  associate_to_vpc true
-end
-
-machine analytics_server_hostname do
   chef_server lazy { chef_server_config }
   provisioning.specific_machine_options('analytics').each do |option|
     add_machine_options option

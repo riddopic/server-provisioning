@@ -11,20 +11,10 @@ include_recipe 'provisioning::_settings'
 #   bundle exec chef-client -z -o provisioning::setup_supermarket -E test
 #
 machine supermarket_server_hostname do
-  provisioning.specific_machine_options('supermarket').each do |option|
-    add_machine_options(option)
-  end
-  action :converge
-end
-
-# Destroy the EIP when using the AWS driver
-aws_eip_address 'supermarket-eip' do
-  machine chef_server_hostname
-  associate_to_vpc true
-end
-
-machine supermarket_server_hostname do
   chef_server lazy { chef_server_config }
+  provisioning.specific_machine_options('supermarket').each do |option|
+    add_machine_options option
+  end
   files lazy {
     {
       "/etc/chef/trusted_certs/#{chef_server_fqdn}.crt" =>

@@ -8,9 +8,6 @@ default['provisioning'].tap do |provisioning|
   # The Cluster Name which will be use to define all default hostnames
   provisioning['id'] = nil
   #
-  # Source IP to add to inbound security group
-  provisioning['acl']['source-ips'] = []
-  #
   # Common Cluster Recipes
   provisioning['common_provisioning_recipes'] = []
   #
@@ -65,15 +62,18 @@ default['provisioning'].tap do |provisioning|
     'enable-reporting' => true
   }
   #
-  # Analytics Server
+  # Chef Analytics Server
   provisioning['analytics'] = {
     'hostname'   => nil,
     'fqdn'       => nil,
-    'features'   => false,
+    'features'   => 'false',
     'flavor'     => 't2.medium',
     'attributes' => {}
   }
   #
-  # Supermarket Server
-  provisioning['supermarket'] = {}
+  # Chef Compliance Server
+  provisioning['compliance'] = nil
+  #
+  # Chef Supermarket Server
+  provisioning['supermarket'] = nil
 end
