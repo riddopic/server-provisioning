@@ -14,3 +14,9 @@ nodes*
 .chef/keys
 .chef/provisioning/
 SCRATCH.md
+terraform/.keys/*.pem
+terraform/.source.tfvars
+terraform/terraform.tfstate*
+terraform/terraform.tfvars
+terraform/.keys/*
+terraform/.terraform/
