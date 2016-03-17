@@ -1,17 +1,14 @@
 DEPENDENCIES
-  chef-ingredient
-    git: https://github.com/chef-cookbooks/chef-ingredient.git
-    revision: 661c5477714234e72c6115b48c35a02bac615ded
   chef-server-12
     path: vendor/chef-server-12
   hostsfile
+  provisioning
+    path: .
+    metadata: true
   runit
     git: https://github.com/afiune/runit.git
     revision: 36cb429889f1b5e067cb3ba16e19144fe27e9a53
     branch: afiune/make-it-work-in-oel
-  server-provisioning
-    path: .
-    metadata: true
 
 GRAPH
   7-zip (1.0.2)
@@ -19,11 +16,9 @@ GRAPH
   apt (3.0.0)
   apt-chef (0.2.2)
     apt (>= 0.0.0)
-  aws (2.9.3)
-    ohai (>= 2.1.0)
   build-essential (2.3.1)
     7-zip (>= 0.0.0)
-  chef-ingredient (0.17.0)
+  chef-ingredient (0.16.0)
     apt-chef (>= 0.2.0)
     yum-chef (>= 0.2.0)
   chef-server-12 (0.1.0)
@@ -37,22 +32,15 @@ GRAPH
     windows (>= 0.0.0)
     yum-epel (>= 0.0.0)
   hostsfile (2.4.5)
-  iptables (1.0.0)
-  ohai (3.0.1)
   packagecloud (0.2.0)
-  runit (1.7.7)
-    packagecloud (>= 0.0.0)
-  server-provisioning (0.1.0)
+  provisioning (0.1.0)
     apt (>= 0.0.0)
-    aws (>= 0.0.0)
-    chef-ingredient (>= 0.0.0)
+    chef-ingredient (= 0.16.0)
     chef-server-12 (>= 0.0.0)
     git (>= 0.0.0)
-    iptables (~> 1.0.0)
-    sysctl (~> 0.6.2)
     yum (>= 0.0.0)
-  sysctl (0.6.2)
-    ohai (>= 0.0.0)
+  runit (1.7.7)
+    packagecloud (>= 0.0.0)
   windows (1.39.2)
     chef_handler (>= 0.0.0)
   yum (3.10.0)

@@ -3,9 +3,6 @@
 # Abstract the specific configurations by providers
 include_recipe 'provisioning::_settings'
 
-# Setup the AWS security groups
-include_recipe 'provisioning::setup_security_group'
-
 # Bootstrap a Chef Server instance with Chef-Zero
 include_recipe 'provisioning::setup_chef_server'
 

@@ -12,10 +12,3 @@ directory provisioning_data_dir do
   recursive true
   action :delete
 end
-
-# Destroy the EIP when using the AWS driver
-aws_eip_address 'chef-server-p' do
-  ignore_failure true
-  action :disassociate
-  only_if { provisioning.driver == 'aws' }
-end

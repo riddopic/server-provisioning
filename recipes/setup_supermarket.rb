@@ -21,7 +21,6 @@ end
 aws_eip_address 'supermarket-eip' do
   machine chef_server_hostname
   associate_to_vpc true
-  only_if { provisioning.driver == 'aws' }
 end
 
 machine supermarket_server_hostname do

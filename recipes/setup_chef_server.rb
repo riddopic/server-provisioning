@@ -15,7 +15,6 @@ end
 aws_eip_address 'chef-server-eip' do
   machine chef_server_hostname
   associate_to_vpc true
-  only_if { provisioning.driver == 'aws' }
 end
 
 machine chef_server_hostname do

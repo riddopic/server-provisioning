@@ -20,7 +20,6 @@ end
 aws_eip_address 'analytics-eip' do
   machine analytics_server_hostname
   associate_to_vpc true
-  only_if { provisioning.driver == 'aws' }
 end
 
 machine analytics_server_hostname do
