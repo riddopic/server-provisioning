@@ -99,4 +99,4 @@ test/
 spec/
 examples/
 
-terraform/
+terraform/*

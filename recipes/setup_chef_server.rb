@@ -9,15 +9,7 @@ machine chef_server_hostname do
   provisioning.specific_machine_options('chef-server').each do |option|
     add_machine_options(option)
   end
-  action :converge
-end
-
-aws_eip_address 'chef-server-eip' do
-  machine chef_server_hostname
-  associate_to_vpc true
-end
-
-machine chef_server_hostname do
+  # Transfer any trusted certs
   Dir.glob("#{Chef::Config[:trusted_certs_dir]}/*").each do |cert|
     file ::File.join('/etc/chef/trusted_certs', ::File.basename(cert)), cert
   end

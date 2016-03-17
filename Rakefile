@@ -358,7 +358,7 @@ namespace :setup do
   desc 'Setup the Chef Infrastructure Provisioning Environment'
   task cluster: [:prerequisites] do
     msg 'Setup the Chef Infrastructure Provisioning Environment'
-    system 'chef exec berks update'
+    chef_zero 'setup'
   end
 
   desc 'Create a Chef Server'

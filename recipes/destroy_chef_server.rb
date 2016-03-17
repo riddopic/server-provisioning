@@ -6,12 +6,6 @@ begin
   # Setting the chef-zero process
   with_chef_server Chef::Config.chef_server_url
 
-  # Destroy the EIP when using the AWS driver
-  aws_eip_address 'chef-server-eip' do
-    ignore_failure true
-    action :destroy
-  end
-
   # Destroy Chef Server
   machine chef_server_hostname do
     action :destroy

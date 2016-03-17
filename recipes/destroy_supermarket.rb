@@ -15,12 +15,6 @@ if supermarket_enabled?
       action :destroy
     end
 
-    # Destroy the EIP when using the AWS driver
-    aws_eip_address 'supermarket-eip' do
-      ignore_failure true
-      action :destroy
-    end
-
     # Delete Trusted Cert
     file File.join(Chef::Config[:trusted_certs_dir], "#{supermarket_server_fqdn}.crt") do
       action :delete

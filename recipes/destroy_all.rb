@@ -1,9 +1,12 @@
 # encoding: UTF-8
 
-# Analytics Server
+# Chef Analytics Server
 include_recipe 'provisioning::destroy_analytics'
 
-# Supermarket Server
+# Chef Compliance Server
+include_recipe 'provisioning::destroy_compliance'
+
+# Chef Supermarket Server
 include_recipe 'provisioning::destroy_supermarket'
 
 # Chef Server
