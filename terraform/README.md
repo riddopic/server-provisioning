@@ -33,10 +33,10 @@ $ terraform plan
 $ terraform apply
 ```
 
-The ouput of the process will be similar to this:
+The output of the process will be similar to this:
 
 ```
-Apply complete! Resources: 64 added, 0 changed, 0 destroyed.
+Apply complete! Resources: 74 added, 0 changed, 0 destroyed.
 
 The state of your infrastructure has been saved to the path
 below. This state is required to modify and destroy your
@@ -47,10 +47,7 @@ State path: terraform.tfstate
 
 Outputs:
 
-  chef-analytics_security_group_id  = sg-9540def2
-  chef-compliance_security_group_id = sg-9240def5
-  chef-server_security_group_id     = sg-9640def1
-  jenkins-worker_security_group_id  = sg-9440def3
-  us-west-2b-public                 = subnet-782fec1c
-  vpc_id                            = vpc-a826decc
+  F5 SSH Address:   = ssh admin@ec2-52-35-238-159.us-west-2.compute.amazonaws.com
+  F5 HTTP URL:      = https://ec2-52-35-238-159.us-west-2.compute.amazonaws.com
+  SSH Bastion Host: = ec2-52-11-46-142.us-west-2.compute.amazonaws.com
 ```

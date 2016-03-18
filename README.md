@@ -1,10 +1,14 @@
-# `provisioning`
+
+# `provisioning` Cookbook
 
 This cookbook can generate a Chef Infrastructure Provisioning Environment using a minimal CentOS or Ubuntu image. This cookbook will setup a Chef server and related components and includes:
 
 *  1 - Chef Server 12
-*  1 - Supermarket Server
 *  1 - Chef Analytics Server
+*  1 - Chef Compliance Server
+*  1 - Supermarket Server
+*  1 - Jenkins Server
+*  4 - Jenkins Workers
 
 Rake Help
 ------------
@@ -17,12 +21,16 @@ Chef Infrastructure Provisioning Environment Helper
 
 Setup Tasks
 The following tasks should be used to set up your environment
-rake setup:analytics      # Activate Analytics Server
-rake setup:chef_server    # Setup a Chef Server
+rake setup:analytics      # Create a Chef Analytics Server
+rake setup:chef_server    # Create a Chef Server
 rake setup:cluster        # Setup the Chef Infrastructure Provisioning Environment
+rake setup:compliance     # Create a Chef Compliance Server
 rake setup:generate_env   # Generate a Chef Infrastructure Provisioning Environment
+rake setup:jenkins        # Create a Jenkins Server
 rake setup:prerequisites  # Install all the prerequisites on you system
+rake setup:splunk         # Create a Splunk Server with Analytics Integration
 rake setup:supermarket    # Create a Supermarket Server
+rake setup:terraform      # Terraform the Infrastructure, Network and Environment
 
 Maintenance Tasks
 The following tasks should be used to maintain your environment
@@ -32,13 +40,19 @@ rake maintenance:update       # Update cookbook dependencies
 Destroy Tasks
 The following tasks should be used to destroy your environment
 rake destroy:all          # Destroy Everything
-rake destroy:analytics    # Destroy Analytics Server
+rake destroy:analytics    # Destroy Chef Analytics Server
 rake destroy:chef_server  # Destroy Chef Server
-rake destroy:supermarket  # Destroy Supermarket Server
+rake destroy:compliance   # Destroy Chef Compliance Server
+rake destroy:jenkins      # Destroy Jenkins Server
+rake destroy:splunk       # Destroy Splunk Server
+rake destroy:supermarket  # Destroy Chef Supermarket Server
+rake destroy:terraform    # Destroy the Infrastructure, Network and Environment
 
 Cluster Information
 The following tasks should be used to get information about your environment
-rake info:list_core_services  # List nodes in the Chef Infrastructure Provisioning Environment
+rake info:graph[region,vpc_id]  # Generate a graph of the VPC
+rake info:list_core_services    # List nodes in the Chef Infrastructure Provisioning Environment
+rake info:terraform             # Inspect state the Infrastructure, Network and Environment
 
 To switch your environment run:
   # export CHEF_ENV=my_environment_name
