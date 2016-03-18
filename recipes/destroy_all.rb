@@ -12,6 +12,12 @@ include_recipe 'provisioning::destroy_supermarket'
 # Splunk Server
 include_recipe 'provisioning::destroy_splunk'
 
+# Splunk Server
+include_recipe 'provisioning::destroy_jenkins_server'
+
+# Splunk Server
+include_recipe 'provisioning::destroy_jenkins_worker'
+
 # Chef Server
 include_recipe 'provisioning::destroy_chef_server'
 
