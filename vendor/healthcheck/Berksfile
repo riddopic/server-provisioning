@@ -1,0 +1,12 @@
+# encoding: UTF-8
+
+source 'https://api.berkshelf.com'
+
+metadata
+
+cookbook 'apt'
+cookbook 'openssh'
+cookbook 'ntp'
+cookbook 'git'
+cookbook 'user'
+cookbook 'docker'
