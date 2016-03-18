@@ -467,7 +467,7 @@ namespace :info do
     end
   end
 
-  # brew install graphviz
+  # brew install graphviz terraform
   desc 'Generate a graph of the VPC'
   task :graph, :region, :vpc_id do |_t, args|
     sh <<-CMD
