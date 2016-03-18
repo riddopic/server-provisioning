@@ -213,9 +213,9 @@ namespace :setup do
       end
     when 'aws'
       options['driver']['key_name'] = ask_for('Key Name: ')
-      options['driver']['ssh_username'] = ask_for('SSH Username', 'ec2-user')
+      options['driver']['ssh_username'] = ask_for('SSH Username', 'ubuntu')
       options['driver']['region'] = ask_for('AWS Region', 'us-west-2')
-      options['driver']['image_id'] = ask_for('Image ID', 'ami-b8fa16d8')
+      options['driver']['image_id'] = ask_for('Image ID', 'ami-e4a54c84')
       options['driver']['use_private_ip_for_ssh'] = ask_for('Use private ip for ssh?', 'yes')
       if ask_for('Would you like to specify source IP for the AWS Security group?', 'yes')
         src_ips = ask_for('Source IPs:', '24.7.32.100/32 162.119.232.109/32 162.119.232.149/32')
@@ -322,7 +322,7 @@ namespace :setup do
   end
 
   desc 'Install all the prerequisites on you system'
-  task :prerequisites do
+  task prerequisites: [:terraform] do
     msg 'Verifying ChefDK version'
     if Gem::Version.new(chefdk_version) < Gem::Version.new('0.10.0')
       puts "Running ChefDK version #{chefdk_version}".red
@@ -386,6 +386,12 @@ namespace :setup do
   task supermarket: [:chef_server] do
     msg 'Setup a Chef Supermarket Server'
     chef_zero 'setup_supermarket'
+  end
+
+  desc 'Create a Jenkins Server'
+  task :jenkins do
+    msg 'Setup a Chef Jenkins Server'
+    chef_zero 'setup_jenkins_server'
   end
 end
 

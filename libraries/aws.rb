@@ -58,7 +58,7 @@ module Server
         @subnet_id = Server::Helpers::Component.subnet_id('us-west-2b')
         if @subnet_id
           opts = Chef::Mixin::DeepMerge.hash_only_merge(opts,
-                                                        bootstrap_options: { subnet_id: @subnet_id })
+            bootstrap_options: { subnet_id: @subnet_id })
         end
 
         opts

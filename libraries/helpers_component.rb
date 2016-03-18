@@ -126,17 +126,24 @@ module Server
       # @param node [Chef::Node] Chef Node object
       # @param name [String] The name of a component
       # @return [Hash] of attributes from a component
-      #
       def component_attributes(node, name)
         node['provisioning'][name]['attributes']
       rescue
         {}
       end
 
+      # Returns the security group ID for the host.
+      #
+      # @param host [String] The name of a component
+      # @return [String] security group ID
       def security_group_ids(host)
         ec2.security_groups.find { |s| s.group_name =~ /#{host}/ }.id
       end
 
+      # Returns the subnet ID for the host.
+      #
+      # @param host [String] The name of a component
+      # @return [String] subnet ID
       def subnet_id(zone)
         ec2.subnets.find { |s| s.availability_zone =~ /#{zone}/ }.id
       end

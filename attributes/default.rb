@@ -83,4 +83,18 @@ default['provisioning'].tap do |provisioning|
   #
   # Chef Supermarket Server
   provisioning['supermarket'] = nil
+  #
+  # Jenkins Server Server
+  provisioning['jenkins-server'] = {
+    'hostname' => nil,
+    'fqdn'     => nil,
+    'flavor'   => 't2.medium'
+  }
+  #
+  # Jenkins Workers Server
+  provisioning['jenkins-worker'] = {
+    'hostname' => nil,
+    'fqdn'     => nil,
+    'flavor'   => 't2.medium'
+  }
 end

@@ -49,7 +49,7 @@ resource "aws_security_group" "chef-provisioned-nat" {
 	}
 
 	tags {
-    Name = "${var.cluster_name} NAT Security Group"
+    Name = "nat security group"
 	}
 }
 resource "aws_instance" "chef-provisioned-nat" {
@@ -74,7 +74,7 @@ resource "aws_eip" "chef-provisioned-nat" {
 	vpc = true
 }
 resource "aws_route53_record" "nat" {
-  zone_id = "${aws_route53_zone.ksplat.zone_id}"
+  zone_id = "Z390Y3AW757O2F"
   name = "nat.ksplat.com"
   type = "CNAME"
   ttl = "300"
@@ -177,7 +177,7 @@ resource "aws_security_group" "chef-provisioned-bastion" {
 	}
 
 	tags {
-    Name = "${var.cluster_name} Bastion Security Group"
+    Name = "bastion security group"
 	}
 }
 resource "aws_instance" "chef-provisioned-bastion" {
@@ -200,7 +200,7 @@ resource "aws_eip" "chef-provisioned-bastion" {
 	vpc = true
 }
 resource "aws_route53_record" "bastion" {
-  zone_id = "${aws_route53_zone.ksplat.zone_id}"
+  zone_id = "Z390Y3AW757O2F"
   name = "bastion.ksplat.com"
   type = "CNAME"
   ttl = "300"
@@ -227,7 +227,7 @@ resource "aws_instance" "f5-bigip" {
   }
 }
 resource "aws_route53_record" "f5-bigip" {
-  zone_id = "${aws_route53_zone.ksplat.zone_id}"
+  zone_id = "Z390Y3AW757O2F"
   name = "f5.ksplat.com"
   type = "CNAME"
   ttl = "300"

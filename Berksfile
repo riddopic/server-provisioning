@@ -7,6 +7,9 @@ metadata
 cookbook 'chef-server-12',
   path: 'vendor/chef-server-12'
 
+cookbook 'healthcheck',
+  path: 'vendor/healthcheck'
+
 cookbook 'hostsfile'
 
 # Point to this repo until this PR is merged:
