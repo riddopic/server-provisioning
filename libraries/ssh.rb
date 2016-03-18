@@ -33,9 +33,8 @@ module Server
           instance_variable_set("@#{attr}", value)
         end
 
-        if @password && @key_file
-          raise 'You should not specify both key_file and password.'
-        end
+        return unless @password && @key_file
+        raise 'You should not specify both key_file and password.'
       end
 
       # Return the machine options to use.

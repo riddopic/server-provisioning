@@ -24,15 +24,16 @@ machine analytics_server_hostname do
   action :converge
 end
 
-# Activate Analytics
-activate_analytics
+# Activate Chef Analytics
+ruby_block 'Activate Chef Analytics' do
+  block { activate_analytics }
+end
 
 # Configuring Analytics on the Chef Server
 machine chef_server_hostname do
   provisioning.specific_machine_options('chef-server').each do |option|
     add_machine_options(option)
   end
-  common_provisioning_recipes.each { |r| recipe r }
   recipe 'chef-server-12::analytics'
   attributes lazy { chef_server_attributes }
   converge true
@@ -64,7 +65,8 @@ machine analytics_server_hostname do
     {
       'provisioning' => {
         'analytics' => {
-          'fqdn' => analytics_server_fqdn
+          'fqdn' => analytics_server_fqdn,
+          'features' => 'false'
         }
       }
     }

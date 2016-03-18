@@ -51,7 +51,7 @@ describe Server::Helpers::Component do
     context 'is NOT speficied and host' do
       before do
         node.default['provisioning']['chef-server']['fqdn'] = nil
-        node.default['provisioning']['provisioner']['fqdn']    = nil
+        node.default['provisioning']['provisioner']['fqdn'] = nil
         node.default['provisioning']['supermarket']['fqdn'] = nil
         node.default['provisioning']['analytics']['fqdn']   = nil
         node.default['provisioning']['splunk']['fqdn']      = nil
@@ -82,7 +82,7 @@ describe Server::Helpers::Component do
       context 'does NOT exist' do
         before do
           node.default['provisioning']['chef-server']['host'] = nil
-          node.default['provisioning']['provisioner']['host']    = nil
+          node.default['provisioning']['provisioner']['host'] = nil
           node.default['provisioning']['supermarket']['host'] = nil
           node.default['provisioning']['analytics']['host']   = nil
           node.default['provisioning']['splunk']['host']      = nil
@@ -129,7 +129,7 @@ describe Server::Helpers::Component do
     context 'is configured' do
       before do
         node.default['provisioning']['chef-server']['hostname'] = 'my-cool-hostname.chef-server.com'
-        node.default['provisioning']['provisioner']['hostname']    = 'my-cool-hostname.provisioner.com'
+        node.default['provisioning']['provisioner']['hostname'] = 'my-cool-hostname.provisioner.com'
         node.default['provisioning']['supermarket']['hostname'] = 'my-cool-hostname.supermarket.com'
         node.default['provisioning']['analytics']['hostname']   = 'my-cool-hostname.analytics.com'
         node.default['provisioning']['splunk']['hostname']      = 'my-cool-hostname.splunk.com'
@@ -151,8 +151,8 @@ describe Server::Helpers::Component do
 
   context 'when the component attributes are not set' do
     before do
-      node.default['provisioning']['chef-server']  = nil
-      node.default['provisioning']['provisioner']     = nil
+      node.default['provisioning']['chef-server'] = nil
+      node.default['provisioning']['provisioner'] = nil
       node.default['provisioning']['supermarket']  = nil
       node.default['provisioning']['analytics']    = nil
       node.default['provisioning']['splunk']       = nil

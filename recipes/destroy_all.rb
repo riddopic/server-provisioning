@@ -9,6 +9,9 @@ include_recipe 'provisioning::destroy_compliance'
 # Chef Supermarket Server
 include_recipe 'provisioning::destroy_supermarket'
 
+# Splunk Server
+include_recipe 'provisioning::destroy_splunk'
+
 # Chef Server
 include_recipe 'provisioning::destroy_chef_server'
 

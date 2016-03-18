@@ -132,6 +132,26 @@ module Server
       rescue
         {}
       end
+
+      def security_group_ids(host)
+        ec2.security_groups.find { |s| s.group_name =~ /#{host}/ }.id
+      end
+
+      def subnet_id(zone)
+        ec2.subnets.find { |s| s.availability_zone =~ /#{zone}/ }.id
+      end
+
+      class << self
+        def ec2
+          require 'aws-sdk'
+          @ec2 ||= Aws::EC2::Resource.new(
+            region: 'us-west-2',
+            credentials: Aws::SharedCredentials.new(
+              path: File.expand_path('~/.aws/credentials')
+            )
+          )
+        end
+      end
     end
   end
 

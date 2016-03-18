@@ -25,7 +25,9 @@ machine compliance_server_hostname do
 end
 
 # Activate Chef Compliance
-activate_compliance
+ruby_block 'Activate Chef Compliance' do
+  block { activate_compliance }
+end
 
 # Installing Chef Compliance
 machine compliance_server_hostname do

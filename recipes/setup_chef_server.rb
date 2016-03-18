@@ -41,6 +41,8 @@ machine chef_server_hostname do
   else
     recipe 'chef-server-12'
   end
+  recipe 'chef-server-12::supermarket'
+  recipe 'chef-server-12::analytics'
   node['provisioning']['chef-server']['recipes'].each { |r| recipe r }
   attributes lazy { chef_server_attributes }
   converge true

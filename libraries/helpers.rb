@@ -161,7 +161,7 @@ module Server
       tag = tag ? { 'Name' => tag } : nil
       { 'cookbook' => 'provisioning',
         'launched_by' => ENV['USER'],
-        'launched_at' => Time.new.strftime("%A, %d %b %Y %l:%M %p %Z")
+        'launched_at' => Time.new.strftime('%A, %d %b %Y %l:%M %p %Z')
       }.merge(tag)
     end
   end

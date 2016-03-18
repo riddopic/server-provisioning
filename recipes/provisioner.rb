@@ -7,6 +7,12 @@
   end
 end
 
-chef_gem 'knife-push' do
+%w(knife-push knife-analytics).each do |knife_plugin|
+  chef_gem knife_plugin do
+    compile_time true if Chef::Resource::ChefGem.method_defined?(:compile_time)
+  end
+end
+
+chef_gem 'aws-sdk' do
   compile_time true if Chef::Resource::ChefGem.method_defined?(:compile_time)
 end

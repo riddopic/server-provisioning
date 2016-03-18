@@ -7,8 +7,8 @@ if compliance_enabled?
   begin
     # Setting the new Chef Server we just created
     with_chef_server chef_server_url,
-      client_name: 'provisioner',
-      signing_key_filename: "#{provisioning_data_dir}/provisioner.pem"
+                     client_name: 'provisioner',
+                     signing_key_filename: "#{provisioning_data_dir}/provisioner.pem"
 
     # Destroy Chef Compliance Server
     machine compliance_server_hostname do

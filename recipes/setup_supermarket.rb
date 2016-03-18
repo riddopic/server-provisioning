@@ -25,7 +25,7 @@ machine supermarket_server_hostname do
 end
 
 # Activate Supermarket
-ruby_block 'Activate Supermarket' do
+ruby_block 'Activate Chef Supermarket' do
   block { activate_supermarket }
 end
 

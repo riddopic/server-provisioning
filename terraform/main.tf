@@ -23,6 +23,9 @@ resource "aws_internet_gateway" "chef-provisioned-gw" {
     Name = "${var.cluster_name} Gateway"
   }
 }
+resource "aws_route53_zone" "ksplat" {
+  name = "ksplat.com"
+}
 #
 # NAT instance
 #
@@ -69,6 +72,13 @@ resource "aws_instance" "chef-provisioned-nat" {
 resource "aws_eip" "chef-provisioned-nat" {
 	instance = "${aws_instance.chef-provisioned-nat.id}"
 	vpc = true
+}
+resource "aws_route53_record" "nat" {
+  zone_id = "${aws_route53_zone.ksplat.zone_id}"
+  name = "nat.ksplat.com"
+  type = "CNAME"
+  ttl = "300"
+  records = ["${aws_instance.chef-provisioned-nat.public_dns}"]
 }
 #
 # Public subnets
@@ -188,6 +198,40 @@ resource "aws_instance" "chef-provisioned-bastion" {
 resource "aws_eip" "chef-provisioned-bastion" {
 	instance = "${aws_instance.chef-provisioned-bastion.id}"
 	vpc = true
+}
+resource "aws_route53_record" "bastion" {
+  zone_id = "${aws_route53_zone.ksplat.zone_id}"
+  name = "bastion.ksplat.com"
+  type = "CNAME"
+  ttl = "300"
+  records = ["${aws_instance.chef-provisioned-bastion.public_dns}"]
+}
+#
+# F5 Big IP
+#
+resource "aws_instance" "f5-bigip" {
+  ami = "${lookup(var.f5-amis, var.aws_default_region)}"
+	availability_zone = "us-west-2b"
+  instance_type = "${lookup(var.instances, "f5-bigip")}"
+  count = "${lookup(var.instance_counts, "f5-bigip")}"
+  key_name = "${var.aws_key_pair_name}"
+  vpc_security_group_ids = ["${aws_security_group.f5-bigip.id}"]
+  subnet_id = "${aws_subnet.us-west-2b-public.id}"
+	associate_public_ip_address = true
+	source_dest_check = false
+  root_block_device = {
+    delete_on_termination = true
+  }
+  tags {
+    Name = "${format("f5-bigip-%02d", count.index + 1)}"
+  }
+}
+resource "aws_route53_record" "f5-bigip" {
+  zone_id = "${aws_route53_zone.ksplat.zone_id}"
+  name = "f5.ksplat.com"
+  type = "CNAME"
+  ttl = "300"
+  records = ["${aws_instance.f5-bigip.public_dns}"]
 }
 #
 # AWS security groups
@@ -620,4 +664,60 @@ resource "aws_security_group_rule" "jenkins-worker_allow_0-65535_all" {
   protocol = "-1"
   cidr_blocks = ["0.0.0.0/0"]
   security_group_id = "${aws_security_group.jenkins-worker.id}"
+}
+#
+# AWS security groups
+#
+# F5 Big IP
+resource "aws_security_group" "f5-bigip" {
+  name = "f5-bigip"
+  description = "F5 Big IP"
+  vpc_id = "${aws_vpc.chef-provisioned-vpc.id}"
+
+  ingress {
+    from_port = 8
+    to_port = 0
+    protocol = "icmp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "f5-bigip security group"
+  }
+}
+# SSH
+resource "aws_security_group_rule" "f5-bigip_allow_22_tcp_all" {
+  type = "ingress"
+  from_port = 22
+  to_port = 22
+  protocol = "tcp"
+  cidr_blocks = ["0.0.0.0/0"]
+  security_group_id = "${aws_security_group.f5-bigip.id}"
+}
+# HTTP
+resource "aws_security_group_rule" "f5-bigip_allow_80_tcp" {
+  type = "ingress"
+  from_port = 80
+  to_port = 80
+  protocol = "tcp"
+  cidr_blocks = ["0.0.0.0/0"]
+  security_group_id = "${aws_security_group.f5-bigip.id}"
+}
+# HTTPS
+resource "aws_security_group_rule" "f5-bigip_allow_443_tcp" {
+  type = "ingress"
+  from_port = 443
+  to_port = 443
+  protocol = "tcp"
+  cidr_blocks = ["0.0.0.0/0"]
+  security_group_id = "${aws_security_group.f5-bigip.id}"
+}
+# Egress: ALL
+resource "aws_security_group_rule" "f5-bigip_allow_0-65535_all" {
+  type = "egress"
+  from_port = 0
+  to_port = 65535
+  protocol = "-1"
+  cidr_blocks = ["0.0.0.0/0"]
+  security_group_id = "${aws_security_group.f5-bigip.id}"
 }

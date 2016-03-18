@@ -21,7 +21,7 @@ default['provisioning'].tap do |provisioning|
     'bootstrap_proxy'        => ENV['HTTPS_PROXY'] || ENV['HTTP_PROXY'],
     'chef_config'            => nil,
     'chef_version'           => nil,
-    'use_private_ip_for_ssh' => false,
+    'use_private_ip_for_ssh' => false
   }
   #
   # SSH Driver Attributes
@@ -45,7 +45,6 @@ default['provisioning'].tap do |provisioning|
     'vm_memory'    => nil,
     'vm_cpus'      => nil,
     'network'      => nil,
-    'key_file'     => nil,
     'chef_config'  => nil,
     'chef_version' => nil
   }
@@ -69,6 +68,14 @@ default['provisioning'].tap do |provisioning|
     'features'   => 'false',
     'flavor'     => 't2.medium',
     'attributes' => {}
+  }
+  #
+  # Splunk Server
+  provisioning['splunk'] = {
+    'hostname_prefix' => nil,
+    'username'        => 'admin',
+    'password'        => nil,
+    'flavor'          => 'c3.large'
   }
   #
   # Chef Compliance Server

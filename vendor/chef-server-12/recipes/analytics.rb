@@ -3,9 +3,9 @@
 if File.exist?('/etc/opscode/chef-server.rb')
   template '/etc/opscode/chef-server.rb' do
     owner 'root'
-    mode '0644'
+    mode 00644
     not_if 'grep analytics /etc/opscode/chef-server.rb'
-    notifies :run, 'execute[stop chef]', :immediately
+    # notifies :run, 'execute[stop chef]', :immediately
     notifies :run, 'execute[reconfigure chef]', :immediately
     notifies :run, 'execute[restart chef]', :immediately
     notifies :run, 'execute[reconfigure opscode-manage]', :immediately

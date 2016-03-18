@@ -46,7 +46,7 @@ module Server
           bootstrap_options: {
             instance_type: @flavor,
             key_name: @key_name,
-            security_group_ids: @security_group_ids,
+            security_group_ids: @security_group_ids
           },
           ssh_username: @ssh_username,
           image_id: @image_id,
@@ -55,9 +55,10 @@ module Server
 
         # Add any optional machine options
         require 'chef/mixin/deep_merge'
+        @subnet_id = Server::Helpers::Component.subnet_id('us-west-2b')
         if @subnet_id
           opts = Chef::Mixin::DeepMerge.hash_only_merge(opts,
-            bootstrap_options: { subnet_id: @subnet_id })
+                                                        bootstrap_options: { subnet_id: @subnet_id })
         end
 
         opts
@@ -78,10 +79,11 @@ module Server
             }
           }
         end
-        if @node['provisioning'][component]['security_group_ids']
+        # if @node['provisioning'][component]['security_group_ids']
+        if Server::Helpers::Component.security_group_ids(component)
           options << {
             bootstrap_options: {
-              security_group_ids: @node['provisioning'][component]['security_group_ids']
+              security_group_ids: Server::Helpers::Component.security_group_ids(component)
             }
           }
         end

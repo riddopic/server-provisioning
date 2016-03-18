@@ -135,7 +135,7 @@ def render_environment(environment, options)
 
   env_file = File.open("environments/#{environment}.json", 'w+')
   env_file << ERB.new(ProvisioningEnvironment.template)
-    .result(ProvisioningEnvironment.new(environment, options).do_binding)
+              .result(ProvisioningEnvironment.new(environment, options).do_binding)
   env_file.close
 
   puts File.read("environments/#{environment}.json")
@@ -214,9 +214,8 @@ namespace :setup do
     when 'aws'
       options['driver']['key_name'] = ask_for('Key Name: ')
       options['driver']['ssh_username'] = ask_for('SSH Username', 'ec2-user')
+      options['driver']['region'] = ask_for('AWS Region', 'us-west-2')
       options['driver']['image_id'] = ask_for('Image ID', 'ami-b8fa16d8')
-      options['driver']['subnet_id'] = ask_for('Subnet ID', 'chef-provisioned-subnet')
-      options['driver']['security_group_ids'] = ask_for('Security Group ID', 'chef-provisioned-sg')
       options['driver']['use_private_ip_for_ssh'] = ask_for('Use private ip for ssh?', 'yes')
       if ask_for('Would you like to specify source IP for the AWS Security group?', 'yes')
         src_ips = ask_for('Source IPs:', '24.7.32.100/32 162.119.232.109/32 162.119.232.149/32')
@@ -255,7 +254,6 @@ namespace :setup do
     case options['driver_name']
     when 'aws'
       options['chef_server']['flavor'] = ask_for('Flavor', 'c3.xlarge')
-      options['chef_server']['aws_tags'] = { 'cookbook' => 'provisioning' }
     when 'ssh'
       options['chef_server']['existing'] = ask_for('Use existing chef-server?', 'no')
       options['chef_server']['host'] = ask_for('Host', '33.33.33.10')
@@ -273,7 +271,6 @@ namespace :setup do
       case options['driver_name']
       when 'aws'
         options['analytics']['flavor'] = ask_for('Flavor', 'c3.xlarge')
-        options['analytics']['aws_tags'] = { 'cookbook' => 'provisioning' }
       when 'ssh'
         options['analytics']['host'] = ask_for('Host', '33.33.33.12')
       when 'vagrant'
@@ -286,11 +283,10 @@ namespace :setup do
 
     puts "\nChef Compliance Server".pink
     if ask_for('Enable Chef Compliance?', 'no')
-      options['analytics'] = {}
+      options['compliance'] = {}
       case options['driver_name']
       when 'aws'
         options['compliance']['flavor'] = ask_for('Flavor', 'c3.xlarge')
-        options['compliance']['aws_tags'] = { 'cookbook' => 'provisioning' }
       when 'ssh'
         options['compliance']['host'] = ask_for('Host', '33.33.33.13')
       when 'vagrant'
@@ -307,7 +303,6 @@ namespace :setup do
       case options['driver_name']
       when 'aws'
         options['supermarket']['flavor'] = ask_for('Flavor', 'c3.xlarge')
-        options['supermarket']['aws_tags'] = { 'cookbook' => 'provisioning' }
       when 'ssh'
         options['supermarket']['host'] = ask_for('Host', '33.33.33.14')
       when 'vagrant'
@@ -351,7 +346,7 @@ namespace :setup do
   task :terraform do
     msg 'Terraform the Infrastructure, Network and Environment'
     Dir.chdir('terraform') do
-      sh("terraform plan && terraform apply")
+      sh('terraform plan && terraform apply')
     end
   end
 
@@ -368,15 +363,23 @@ namespace :setup do
   end
 
   desc 'Create a Chef Analytics Server'
-  task analytics: [:chef_server] do
+  # task analytics: [:chef_server] do
+  task :analytics do
     msg 'Setup a Chef Analytics Server'
     chef_zero 'setup_analytics'
   end
 
   desc 'Create a Chef Compliance Server'
-  task compliance: [:chef_server] do
+  # task compliance: [:chef_server] do
+  task :compliance do
     msg 'Setup a Chef Compliance Server'
     chef_zero 'setup_compliance'
+  end
+
+  desc 'Create a Splunk Server with Analytics Integration'
+  task splunk: [:analytics] do
+    msg 'Setup Splunk Server to show some Analytics Integrations'
+    chef_zero 'setup_splunk'
   end
 
   desc 'Create a Supermarket Server'
@@ -409,7 +412,7 @@ namespace :destroy do
   desc 'Destroy the Infrastructure, Network and Environment'
   task :terraform do
     Dir.chdir('terraform') do
-      sh("terraform destroy")
+      sh('terraform destroy')
     end
   end
 
@@ -421,6 +424,11 @@ namespace :destroy do
   desc 'Destroy Chef Analytics Server'
   task :analytics do
     chef_zero 'destroy_analytics'
+  end
+
+  desc 'Destroy Splunk Server'
+  task :splunk do
+    chef_zero 'destroy_splunk'
   end
 
   desc 'Destroy Chef Supermarket Server'
@@ -437,26 +445,26 @@ end
 namespace :info do
   desc 'List nodes in the Chef Infrastructure Provisioning Environment'
   task :list_core_services do
-    system 'knife search node \'name:*server* OR name:node*\' -a ipaddress'
+    system 'knife search node \'name:*server* OR name:node*\' -a cloud.public_ipv4'
     puts "Chef Server URL: #{chef_server_url}"
   end
 
   desc 'Inspect state the Infrastructure, Network and Environment'
   task :terraform do
     Dir.chdir('terraform') do
-      sh("terraform show")
+      sh('terraform show')
     end
   end
 
   # brew install graphviz
   desc 'Generate a graph of the VPC'
-  task :graph, :region, :vpc_id do |t, args|
+  task :graph, :region, :vpc_id do |_t, args|
     sh <<-CMD
     sgviz generate --output-path provisioned_vpc \
                    --region #{args[:region]} \
-                   --vpc-ids #{args[:vpc_id]} && \
-    sgviz open --output-path provisioned_vpc --region #{args[:region]}
+                   --vpc-ids #{args[:vpc_id]}
     CMD
+    sh("sgviz open --output-path provisioned_vpc --region #{args[:region]}")
   end
 end
 

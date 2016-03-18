@@ -21,3 +21,5 @@ terraform/terraform.tfstate*
 terraform/terraform.tfvars
 terraform/.keys/*
 terraform/.terraform/
+provisioned_vpc.dot
+provisioned_vpc.png

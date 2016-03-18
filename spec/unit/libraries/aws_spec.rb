@@ -7,7 +7,7 @@ describe Server::Provisioning::Aws do
   let(:aws_object) { described_class.new(node) }
 
   before do
-    node.default['provisioning']   = {}
+    node.default['provisioning'] = {}
     node.default['ec2']['local_ipv4']  = '10.223.1.33'
     node.default['ec2']['public_ipv4'] = '192.168.1.2'
   end
