@@ -18,8 +18,6 @@ end
 
 depends 'chef-server-12'
 depends 'chef-ingredient', '= 0.16.0'
-depends 'jenkins', '~> 2.4'
-depends 'healthcheck'
 depends 'git'
 depends 'apt'
 depends 'yum'

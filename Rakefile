@@ -442,6 +442,11 @@ namespace :destroy do
     chef_zero 'destroy_supermarket'
   end
 
+  desc 'Destroy Jenkins Server'
+  task :jenkins do
+    chef_zero 'destroy_jenkins_server'
+  end
+
   desc 'Destroy Chef Server'
   task :chef_server do
     chef_zero 'destroy_chef_server'
